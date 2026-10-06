@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 222 - Overview and Supervised Learning</title>
+  <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root { --ink:#142033; --muted:#5d6b7e; --paper:#f7f8fb; --line:#d9dfe8; --accent:#0c5b8c; --accent-pale:#e8f3f8; --warn:#fff7df; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    .hero { background:linear-gradient(120deg,#0c314d,#126c93); color:#fff; padding:4.5rem max(1.25rem,calc((100vw - 1040px)/2)); }
+    .hero p { max-width:740px; font-size:1.13rem; opacity:.94; }
+    h1 { font-size:clamp(2.2rem,5vw,4rem); line-height:1.05; margin:0 0 .8rem; letter-spacing:-.04em; }
+    h2 { font-size:clamp(1.65rem,3vw,2.25rem); line-height:1.15; margin:0 0 .6rem; letter-spacing:-.025em; }
+    h3 { font-size:1.2rem; margin:0 0 .35rem; }
+    main { width:min(1040px,calc(100% - 2.5rem)); margin:2.6rem auto 5rem; }
+    section { margin:3rem 0; }
+    .lead { font-size:1.15rem; max-width:820px; }
+    .tag { display:inline-block; padding:.2rem .65rem; border-radius:99px; background:var(--accent-pale); color:#075379; font-weight:700; font-size:.83rem; margin:.2rem .25rem .2rem 0; }
+    .artifact-nav { display:flex; justify-content:space-between; gap:1rem; margin:1.4rem 0 2rem; font-size:.9rem; }
+    .artifact-nav a, .artifact-nav span { padding:.45rem .7rem; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--accent); text-decoration:none; }
+    .artifact-nav span { color:var(--muted); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1rem; margin:1rem 0; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:1.1rem 1.2rem; box-shadow:0 3px 12px #1420330b; }
+    .card p { margin:.4rem 0 0; color:#3c495a; }
+    .study { background:#fff; border-left:5px solid var(--accent); padding:1rem 1.25rem; margin:1rem 0; }
+    .exam { background:var(--warn); border:1px solid #ecdca5; border-radius:10px; padding:1rem 1.2rem; margin:1rem 0; }
+    .exam strong { color:#654600; }
+    .slide-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1.1rem; margin:1.15rem 0 1.8rem; }
+    figure { background:#fff; margin:0; border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:0 3px 10px #1420330c; cursor:zoom-in; }
+    figure img { display:block; width:100%; height:auto; background:#111; }
+    figcaption { padding:.45rem .7rem; color:var(--muted); font-size:.72rem; line-height:1.35; }
+    .formula { overflow:auto; padding:.75rem 1rem; border-radius:8px; background:#101b2a; color:#eaf4ff; font: .95rem/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; }
+    table { border-collapse:collapse; width:100%; background:#fff; margin:1rem 0; font-size:.94rem; }
+    th,td { padding:.72rem .8rem; text-align:left; vertical-align:top; border:1px solid var(--line); }
+    th { background:#173d5c; color:#fff; }
+    tr:nth-child(even) td { background:#f1f7fa; }
+    ol li { margin:.45rem 0; }
+    details { background:#fff; border:1px solid var(--line); border-radius:10px; padding:.8rem 1rem; margin:.7rem 0; }
+    summary { cursor:pointer; font-weight:700; }
+    .viewer { position:fixed; inset:0; z-index:10; display:none; place-items:center; padding:1.3rem; background:#061421e6; cursor:zoom-out; }
+    .viewer.open { display:grid; }
+    .viewer .viewer-content { width:min(96vw,1200px); text-align:center; cursor:default; }
+    .viewer img { display:block; max-width:100%; max-height:78vh; margin:auto; border-radius:8px; box-shadow:0 15px 60px #000; }
+    .viewer p { margin:.65rem auto 0; max-width:850px; color:#fff; font-size:.9rem; line-height:1.45; }
+    .viewer button { position:fixed; top:1rem; right:1rem; border:0; border-radius:99px; width:2.7rem; height:2.7rem; font-size:1.4rem; cursor:pointer; color:#fff; background:#ffffff2b; }
+    footer { width:min(1040px,calc(100% - 2.5rem)); margin:0 auto 3rem; color:var(--muted); font-size:.9rem; border-top:1px solid var(--line); padding-top:1rem; }
+    @media print { body{background:#fff} .hero{padding:1.5rem} main{margin:1rem auto} section{break-inside:avoid} }
+  </style>
+<link rel="stylesheet" href="series-ui.css"><script defer src="series-ui.js"></script></head>
+<body>
+  <header class="hero">
+    <p class="tag" style="background:#ffffff24;color:#fff">AI 222 / Lecture 01</p>
+    <h1>Overview +<br>Supervised Learning</h1>
+    <p>A written-exam study artifact built from your actual lecture slides. Read the explanation, inspect the slide used in class, then attempt the prompt before opening its answer scaffold.</p>
+  </header>
+  <main>
+    <nav class="artifact-nav" aria-label="Lecture navigation"><span>← Start of series</span><a href="02_datasets_dataloaders.html">Next: Datasets and Dataloaders →</a></nav>
+    <section>
+      <h2>How to use this</h2>
+      <div class="grid">
+        <article class="card"><h3>Learn</h3><p>Read the plain-English explanation first. Your aim is to explain the idea without repeating the slide word-for-word.</p></article>
+        <article class="card"><h3>Anchor</h3><p>Use the embedded source slides to reconnect the explanation to the diagram, notation, and examples your instructor actually showed.</p></article>
+        <article class="card"><h3>Perform</h3><p>For every formula: write it, substitute values, calculate, then state what the number means.</p></article>
+      </div>
+      <div class="study"><strong>Big idea:</strong> Deep learning learns a parameterized function from data. <strong>Supervised</strong> learning is the case where the data includes the desired answer for each example.</div>
+    </section>
+
+    <section>
+      <p class="tag">Overview deck</p>
+      <h2>1. AI, machine learning, and deep learning</h2>
+      <p>Artificial intelligence is the broad ambition: machines that show capabilities such as reasoning, planning, problem solving, abstraction, and learning. Machine learning is one route to AI: rather than writing every decision rule, we fit a model from examples. Deep learning is machine learning using multi-layer neural networks that learn useful features and decisions together.</p>
+      <div class="slide-grid">
+        <figure><img src="ai222_01_assets/overview-18.png" alt="Lecture slide showing AI, machine learning, and deep learning relationship"><figcaption>Slide 18: The nesting matters—DL is a subset of ML, and ML is a subset of AI.</figcaption></figure>
+        <figure><img src="ai222_01_assets/overview-19.png" alt="Lecture slide comparing rule-based AI, machine learning, and deep learning in face detection"><figcaption>Slide 19: Use this face-detection example to contrast rules, hand-crafted features, and learned representations.</figcaption></figure>
+      </div>
+      <table><thead><tr><th>Approach</th><th>What is provided by people?</th><th>What is learned?</th></tr></thead><tbody>
+        <tr><td>Rule-based AI</td><td>Rules, templates, conditions</td><td>Typically nothing; the behavior is specified.</td></tr>
+        <tr><td>Classical ML</td><td>Features are usually hand-designed.</td><td>A decision rule/classifier over those features.</td></tr>
+        <tr><td>Deep learning</td><td>Architecture, objective, data</td><td>Useful representations/features <em>and</em> the decision mapping.</td></tr>
+      </tbody></table>
+      <div class="exam"><strong>Likely essay move:</strong> Do not say only “deep learning uses more data.” Explain the mechanism: representations are learned from examples, rather than being fully written as rules or supplied as hand-crafted features.</div>
+    </section>
+
+    <section>
+      <h2>2. Why deep learning became practical</h2>
+      <p>The underlying ideas are older than the current AI boom: perceptrons, CNNs, and backpropagation existed decades earlier. The modern change was the combination of large datasets, powerful parallel GPU computation, and successful training practices. AlexNet’s 2012 ImageNet result is a landmark example, not proof that one model “invented” deep learning.</p>
+      <div class="slide-grid">
+        <figure><img src="ai222_01_assets/overview-20.png" alt="AlexNet ImageNet slide"><figcaption>Slide 20: AlexNet is evidence for the 2012 turning point, not evidence that neural-network ideas suddenly appeared then.</figcaption></figure>
+        <figure><img src="ai222_01_assets/overview-21.png" alt="Slide explaining compute and data factors"><figcaption>Slide 21: The ideas were old; large datasets and GPU-scale computation made them practical.</figcaption></figure>
+        <figure><img src="ai222_01_assets/overview-23.png" alt="1D versus 2D tensor operation slide"><figcaption>Slide 23: Neural networks repeatedly transform tensors; GPUs help because many of these operations parallelize well.</figcaption></figure>
+      </div>
+      <div class="study"><strong>Exam-safe statement:</strong> GPUs are not “smarter” CPUs. They help because many tensor operations can be calculated in parallel, which makes large-scale neural-network training feasible.</div>
+    </section>
+
+    <section>
+      <h2>3. Prediction is not causation</h2>
+      <p>A predictive model estimates what is likely to be observed: <em>p(y | x)</em>. Causal reasoning asks what would happen after an intervention: <em>p(y | do(x))</em>. Counterfactual reasoning goes further, asking what would have happened under a different action. The slides present this distinction as an important limit/question around AGI—not as a settled claim that foundation models do or do not achieve it.</p>
+      <div class="slide-grid"><figure><img src="ai222_01_assets/overview-25.png" alt="AGI and causal ladder slide"><figcaption>Slide 25: Separate association (seeing), intervention (doing), and counterfactual reasoning (imagining).</figcaption></figure><figure><img src="ai222_01_assets/overview-27.png" alt="Foundation models and AGI takeaway question"><figcaption>Slide 27: Treat this as an open question. A strong answer explains the distinction without claiming a settled conclusion.</figcaption></figure></div>
+    </section>
+
+    <section>
+      <p class="tag">Supervised Learning deck</p>
+      <h2>4. The learning setup: E, T, and P</h2>
+      <p>Tom Mitchell’s definition gives you a reliable essay structure. A program learns from <strong>experience E</strong>, with respect to a class of <strong>tasks T</strong>, and a <strong>performance measure P</strong>, if its measured performance improves with experience. In supervised learning, E is a dataset of inputs paired with correct outputs.</p>
+      <div class="slide-grid"><figure><img src="ai222_01_assets/supervised-01.png" alt="Tom Mitchell learning definition slide"><figcaption>Slide 1: Use Experience, Task, and Performance as the backbone of any supervised-learning explanation.</figcaption></figure><figure><img src="ai222_01_assets/supervised-07.png" alt="Dataset task performance formal diagram"><figcaption>Slide 7: x is input, y is ground truth, y-hat is prediction, and theta is the trainable parameter set.</figcaption></figure><figure><img src="ai222_01_assets/supervised-08.png" alt="Machine learning and generalization slide"><figcaption>Slide 8: Training changes theta; the held-out test result tells you whether that learning generalizes.</figcaption></figure></div>
+      <div class="formula">\(\mathcal{D}_{\mathrm{train}}=\{(\mathbf{x}_n,y_n)\}_{n=1}^{N}\)<br>\(\hat{y}=f(\mathbf{x},\boldsymbol{\theta})\)<br>\(\boldsymbol{\theta}_0\xrightarrow{\mathrm{training}}\boldsymbol{\theta}^{*}\)<br>\(\mathrm{gap}=\mathrm{accuracy}_{\mathrm{train}}-\mathrm{accuracy}_{\mathrm{test}}\)</div>
+      <p><strong>Notation:</strong> x is the input; y is the ground-truth label/target; y-hat is the prediction; theta is the set of trainable parameters. Train data helps choose theta. Held-out test data evaluates whether the resulting model works on unseen examples.</p>
+      <div class="exam"><strong>Essay warning:</strong> A high training score alone does not establish learning that generalizes. Explain the test set and the generalization gap.</div>
+    </section>
+
+    <section>
+      <h2>5. The same template, different tasks</h2>
+      <p>The supervised-learning pipeline remains the same, but x, y, the model output, and the metric depend on the task.</p>
+      <div class="slide-grid"><figure><img src="ai222_01_assets/supervised-16.png" alt="Multiclass classification and one-hot encoding slide"><figcaption>Slide 16: One-hot encoding lets the target align with a probability for every possible class.</figcaption></figure><figure><img src="ai222_01_assets/supervised-17.png" alt="Binary classification slide"><figcaption>Slide 17: Binary classification predicts one of two outcomes; sentiment is the course example.</figcaption></figure><figure><img src="ai222_01_assets/supervised-18.png" alt="Sequence to sequence learning slide"><figcaption>Slide 18: The output can itself be a sequence, such as phonemes generated from text.</figcaption></figure><figure><img src="ai222_01_assets/supervised-19.png" alt="Curve fitting regression slide"><figcaption>Slide 19: Regression predicts a continuous number rather than a category.</figcaption></figure></div>
+      <table><thead><tr><th>Task</th><th>What y looks like</th><th>Example</th></tr></thead><tbody><tr><td>Multiclass classification</td><td>One of K classes / one-hot vector</td><td>Digit image → 0 to 9</td></tr><tr><td>Binary classification</td><td>0 or 1</td><td>Sentence → negative or positive</td></tr><tr><td>Sequence-to-sequence</td><td>Target sequence</td><td>Text → phonemes</td></tr><tr><td>Regression</td><td>Continuous number</td><td>Input → curve value</td></tr></tbody></table>
+    </section>
+
+    <section>
+      <h2>6. Match the metric to the task</h2>
+      <div class="slide-grid"><figure><img src="ai222_01_assets/supervised-23.png" alt="Accuracy formula slide"><figcaption>Slide 23: Accuracy is the fraction of correct classifications; it may hide which kinds of mistakes were made.</figcaption></figure><figure><img src="ai222_01_assets/supervised-24.png" alt="Word error rate slide"><figcaption>Slide 24: WER counts substitutions, insertions, and deletions against the reference transcript.</figcaption></figure><figure><img src="ai222_01_assets/supervised-26.png" alt="Intersection over Union slide"><figcaption>Slide 26: IoU measures object-box overlap as intersection divided by union.</figcaption></figure><figure><img src="ai222_01_assets/supervised-27.png" alt="Precision and recall slide"><figcaption>Slide 27: Precision guards against false positives; recall guards against false negatives.</figcaption></figure></div>
+      <table><thead><tr><th>Metric</th><th>Formula</th><th>Interpretation</th></tr></thead><tbody>
+        <tr><td>Accuracy</td><td>correct / total</td><td>Classification; higher is better.</td></tr>
+        <tr><td>WER</td><td>(S + I + D) / N</td><td>Speech recognition; lower is better. N is number of ground-truth words.</td></tr>
+        <tr><td>IoU</td><td>intersection / union</td><td>Object detection; higher means boxes overlap more.</td></tr>
+        <tr><td>Precision</td><td>TP / (TP + FP)</td><td>“When I predict positive, how often am I right?”</td></tr>
+        <tr><td>Recall</td><td>TP / (TP + FN)</td><td>“Of real positives, how many did I find?”</td></tr>
+      </tbody></table>
+      <div class="study"><strong>Light computation:</strong> TP=18, FP=6, FN=2. Precision = 18/(18+6)=0.75. Recall = 18/(18+2)=0.90. So 75% of positive predictions were correct, while 90% of actual positives were found.</div>
+    </section>
+
+    <section>
+      <h2>7. Training means minimizing loss</h2>
+      <p>A metric judges the final task behavior. A <strong>loss function</strong> provides the numerical signal used while fitting parameters. For each training example, compare y to y-hat. The optimizer adjusts theta to reduce average loss across the training set.</p>
+      <div class="slide-grid"><figure><img src="ai222_01_assets/supervised-31.png" alt="Learning by minimizing loss slide"><figcaption>Slide 31: Loss turns the gap between ground truth and prediction into a number an optimizer can reduce.</figcaption></figure><figure><img src="ai222_01_assets/supervised-32.png" alt="Empirical risk minimization slide"><figcaption>Slide 32: ERM means minimizing average loss over the training examples actually observed.</figcaption></figure><figure><img src="ai222_01_assets/supervised-34.png" alt="Loss functions table slide"><figcaption>Slide 34: The output/target type determines whether MSE, MAE, CE, or BCE makes sense.</figcaption></figure><figure><img src="ai222_01_assets/supervised-35.png" alt="Categorical cross entropy slide"><figcaption>Slide 35: With a one-hot target, only the predicted probability of the correct class contributes to CE.</figcaption></figure></div>
+      <div class="formula">\(R_{\mathrm{emp}}(f,\mathbf{X},\mathbf{y})=\frac{1}{N}\sum_{n=1}^{N}\ell(y_n,f(\mathbf{x}_n,\boldsymbol{\theta}))\)<br><br>\(\mathrm{MSE}=\frac{1}{N}\sum_n(y_n-\hat{y}_n)^2\)<br>\(\mathrm{CE}=-\sum_i y_i\log(p_i)\)<br>\(\mathrm{BCE}=-[y\log p+(1-y)\log(1-p)]\)</div>
+      <p><strong>Cross-entropy intuition:</strong> when y is one-hot, categorical cross-entropy becomes negative log of the probability placed on the correct class. A correct class probability of 0.75 gives −log(0.75) ≈ 0.288. A confident wrong prediction gives a much larger loss.</p>
+    </section>
+
+    <section>
+      <h2>8. Written-exam practice</h2>
+      <details><summary>Explain supervised learning using E, T, and P.</summary><p>Define E as labeled experience/data, T as learning a mapping f(x, theta), and P as a test metric. Then explain that training adjusts theta from the training set, while P is measured on unseen test data. Finish with one concrete example such as digit classification.</p></details>
+      <details><summary>Why is a test set necessary when training loss is low?</summary><p>Low training loss only says the model fits the observed examples. The test set estimates generalization to unseen examples. Compare training and test performance using the generalization gap; a large gap can indicate overfitting.</p></details>
+      <details><summary>Compare precision and recall with a use case.</summary><p>Precision is TP/(TP+FP): it limits false alarms among predicted positives. Recall is TP/(TP+FN): it limits missed actual positives. In disease screening, missing true cases can be costly, so recall is often important; the appropriate trade-off depends on error cost.</p></details>
+      <details><summary>Compute categorical cross-entropy for y=[0,1,0] and p=[0.10,0.75,0.15].</summary><p>CE = −[0 log(.10) + 1 log(.75) + 0 log(.15)] = −log(.75) ≈ 0.288. Explain that the correct class had probability .75, so the loss is relatively low.</p></details>
+    </section>
+    <section>
+      <h2>Next lecture teaser: Datasets and Dataloaders</h2>
+      <p>Supervised learning assumes a training set of correct input–label pairs. The next lecture makes that assumption concrete: how data is collected and labeled, how it is split without leakage, and how PyTorch turns individual examples into shuffled mini-batches for training.</p>
+      <div class="formula">\((\mathbf{x},y)\) example \(\rightarrow\) DataLoader batch \(\rightarrow\) model predicts \(\hat{y}\) \(\rightarrow\) loss compares \(y\) and \(\hat{y}\)</div>
+    </section>
+  </main>
+  <div class="viewer" id="slide-viewer" role="dialog" aria-modal="true" aria-label="Enlarged lecture slide">
+    <button type="button" aria-label="Close enlarged slide">×</button><div class="viewer-content"><img alt=""><p></p></div>
+  </div>
+  <footer>Built from the supplied <em>Overview.pdf</em> and <em>Supervised.pdf</em>. Embedded images are direct raster captures of the referenced lecture slides; all explanatory annotations and practice prompts are study aids.</footer>
+  <script>
+    const viewer = document.querySelector('#slide-viewer');
+    const enlarged = viewer.querySelector('img');
+    const description = viewer.querySelector('p');
+    const closeViewer = () => viewer.classList.remove('open');
+    document.querySelectorAll('figure img').forEach(img => img.addEventListener('click', () => {
+      enlarged.src = img.src; enlarged.alt = img.alt; description.textContent = img.closest('figure').querySelector('figcaption').textContent; viewer.classList.add('open');
+    }));
+    viewer.addEventListener('click', event => { if (event.target === viewer) closeViewer(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeViewer(); });
+  </script>
+</body>
+</html>

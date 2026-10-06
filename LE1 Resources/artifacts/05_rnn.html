@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AI 222 Study Guide 05 | Recurrent Neural Networks</title>
+  <style>
+    :root { --ink:#182536; --muted:#526275; --paper:#f7f8fb; --surface:#fff; --line:#dbe3ec; --blue:#234b79; --aqua:#dff4f3; --mint:#0f766e; --gold:#fff2cf; --rose:#fff0ed; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:#155b86; }
+    a:focus-visible, button:focus-visible, summary:focus-visible { outline:3px solid #e29b21; outline-offset:3px; }
+    header { padding:4.3rem max(1.25rem,calc((100vw - 1080px)/2)); color:#fff; background:linear-gradient(125deg,#14263d 5%,#155f68 74%,#248175); }
+    header .eyebrow { margin:0 0 .75rem; color:#bcf0e7; font-size:.83rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    h1 { max-width:850px; margin:0; font-size:clamp(2.4rem,6vw,4.6rem); letter-spacing:-.05em; line-height:1.02; }
+    header p:last-child { max-width:780px; margin:1.1rem 0 0; color:#ebfffd; font-size:1.11rem; }
+    main, footer { width:min(1080px,calc(100% - 2.5rem)); margin:auto; }
+    main { padding-bottom:3rem; }
+    nav { display:flex; justify-content:space-between; flex-wrap:wrap; gap:.65rem; margin:1.35rem 0 2rem; }
+    nav a { display:inline-block; padding:.5rem .8rem; border:1px solid var(--line); border-radius:9px; background:#fff; text-decoration:none; font-size:.92rem; font-weight:700; }
+    .toc { display:flex; flex-wrap:wrap; gap:.45rem; margin:1rem 0 2rem; }
+    .toc a { border:1px solid #b9d8d4; border-radius:99px; padding:.24rem .7rem; background:#e9f8f5; color:#155d61; font-size:.86rem; text-decoration:none; }
+    section { margin:3rem 0; scroll-margin-top:1rem; }
+    h2 { margin:0 0 .65rem; font-size:clamp(1.75rem,3.4vw,2.35rem); line-height:1.2; letter-spacing:-.035em; }
+    h3 { margin:0 0 .4rem; font-size:1.15rem; }
+    p { margin:.55rem 0 1rem; }
+    .kicker { display:inline-block; margin-bottom:.55rem; color:var(--mint); font-size:.8rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    .lead { max-width:860px; font-size:1.08rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:.9rem; margin:1.1rem 0; }
+    .card, .callout, .exercise { border:1px solid var(--line); border-radius:13px; padding:1rem 1.15rem; background:var(--surface); }
+    .card p { margin:.3rem 0 0; color:#415165; }
+    .callout { border-left:5px solid var(--mint); background:#f0faf8; }
+    .exercise { background:var(--gold); border-color:#ebd69c; }
+    .exercise strong { color:#674b0b; }
+    .slides { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1rem; margin:1.2rem 0; }
+    figure { margin:0; overflow:hidden; border:1px solid var(--line); border-radius:12px; background:#fff; box-shadow:0 3px 12px #15243a0b; }
+    figure button { display:block; width:100%; padding:0; border:0; background:#fff; cursor:zoom-in; }
+    figure img { display:block; width:100%; height:auto; aspect-ratio:16/9; object-fit:contain; }
+    figcaption { padding:.55rem .75rem; color:var(--muted); font-size:.8rem; line-height:1.4; }
+    .math { overflow:auto; padding:.85rem 1rem; border-radius:9px; background:#172638; color:#f0f7ff; }
+    .math-fallback { font: .96rem/1.75 ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre-wrap; }
+    .math-tex { display:none; }
+    .mathjax-ready .math-tex { display:block; }
+    .mathjax-ready .math-fallback { display:none; }
+    .stepper { border:1px solid #a9d6d0; border-radius:13px; padding:1.1rem; background:#f0faf8; }
+    .stepper .controls { display:flex; flex-wrap:wrap; gap:.45rem; margin:.8rem 0; }
+    button.step { border:1px solid #8ac1b8; border-radius:8px; padding:.48rem .72rem; background:#fff; color:#145654; font:inherit; font-weight:700; cursor:pointer; }
+    button.step[aria-pressed="true"] { color:#fff; background:#176d68; }
+    #step-output { min-height:4.5rem; border:1px solid #b6d9d3; border-radius:9px; padding:.7rem .9rem; background:#fff; }
+    table { width:100%; margin:1rem 0; border-collapse:collapse; background:#fff; font-size:.94rem; }
+    th, td { padding:.7rem .78rem; border:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { background:#254762; color:#fff; }
+    tbody tr:nth-child(even) { background:#f0f6f8; }
+    details { margin:.75rem 0; border:1px solid var(--line); border-radius:10px; padding:.75rem 1rem; background:#fff; }
+    summary { cursor:pointer; font-weight:750; }
+    details p { margin:.65rem 0 .2rem; }
+    .viewer { position:fixed; inset:0; z-index:20; display:none; place-items:center; padding:1rem; background:#071320ed; }
+    .viewer.open { display:grid; }
+    .viewer-panel { width:min(96vw,1300px); max-height:95vh; overflow:auto; text-align:center; }
+    .viewer img { display:block; max-width:100%; max-height:80vh; margin:auto; border-radius:6px; background:#fff; box-shadow:0 16px 50px #0009; }
+    .viewer p { max-width:900px; margin:.7rem auto 0; color:#fff; font-size:.91rem; }
+    .viewer .close { position:fixed; right:1rem; top:1rem; border:0; border-radius:99px; width:2.6rem; height:2.6rem; background:#ffffff2b; color:#fff; font-size:1.5rem; cursor:pointer; }
+    footer { padding:1rem 0 2.5rem; border-top:1px solid var(--line); color:var(--muted); font-size:.88rem; }
+    @media (max-width:620px) { .slides { grid-template-columns:1fr; } .math { font-size:.84rem; } th,td { padding:.5rem; } }
+    @media print { body { background:#fff; } header { padding:1.5rem; } nav,.toc,.viewer,.stepper .controls { display:none; } section,figure { break-inside:avoid; } }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+      startup: { pageReady: () => MathJax.startup.defaultPageReady().then(() => document.documentElement.classList.add('mathjax-ready')) }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<link rel="stylesheet" href="series-ui.css"><script defer src="series-ui.js"></script></head>
+<body>
+  <header>
+    <p class="eyebrow">AI 222 · Lecture 05 · Exam guide</p>
+    <h1>Recurrent Neural Networks</h1>
+    <p>How a model reads a sequence one step at a time, remembers context, and produces one answer or another sequence. Built for short essays, diagram explanations, and light computations.</p>
+  </header>
+  <main>
+    <nav aria-label="Lecture navigation"><a href="04_cnn.html">← Previous: CNN</a><a href="06_transformer.html">Next: Transformer →</a></nav>
+    <div class="toc" aria-label="On this page"><a href="#bridge">CNN → RNN</a><a href="#state">Hidden state</a><a href="#patterns">Output patterns</a><a href="#teacher">Teacher forcing</a><a href="#variants">Variants</a><a href="#limits">Limits</a><a href="#practice">Exam practice</a></div>
+
+    <section id="bridge">
+      <span class="kicker">Start with the contrast</span><h2>1. From CNN to RNN: position becomes time</h2>
+      <p class="lead">A CNN reuses a filter across image locations. An RNN reuses the <em>same state-update weights</em> across sequence steps. The new ingredient is a hidden state: what the model has carried forward from earlier steps.</p>
+      <div class="grid"><div class="card"><h3>CNN question</h3><p>“What local pattern is at this spatial position?” A shared kernel scans an image.</p></div><div class="card"><h3>RNN question</h3><p>“Given what I have seen so far, how should I interpret this next item?” Shared weights update the state over time.</p></div><div class="card"><h3>Typical sequence</h3><p>Words in a sentence, audio frames, sensor readings, or even image rows treated in order.</p></div></div>
+      <div class="slides"><figure><button type="button" aria-label="Enlarge lecture slide 2"><img src="ai222_05_assets/rnn-02.png" alt="Lecture slide defining RNNs as sequence processors" loading="lazy"></button><figcaption>Slide 2 · A sequence is an ordered list such as words, signals, or image pixels.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 4"><img src="ai222_05_assets/rnn-04.png" alt="Lecture comparison of CNN, MLP, and RNN weight sharing" loading="lazy"></button><figcaption>Slide 4 · The recurrent weights are reused at each sequence step.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 5"><img src="ai222_05_assets/rnn-05.png" alt="Lecture slide contrasting single-step and sequential processing" loading="lazy"></button><figcaption>Slide 5 · The RNN processes x₀, x₁, … in order over multiple steps.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 6"><img src="ai222_05_assets/rnn-06.png" alt="Lecture diagram comparing CNN or MLP flow with an RNN feedback loop" loading="lazy"></button><figcaption>Slide 6 · The feedback loop is the visual shorthand for carrying state forward.</figcaption></figure></div>
+      <div class="exercise"><strong>Essay move:</strong> Define a sequence, say why order matters, identify the reused weights, then describe the hidden state. Do not say an RNN has a new set of weights for every time step.</div>
+    </section>
+
+    <section id="state">
+      <span class="kicker">Core mechanism</span><h2>2. Unroll the loop and update the hidden state</h2>
+      <p>The loop can be drawn as repeated copies of one cell. At time <em>t</em>, that cell receives the current input <em>x<sub>t</sub></em> and the previous hidden state <em>h<sub>t−1</sub></em>. Its output <em>h<sub>t</sub></em> summarizes the prefix seen so far, imperfectly.</p>
+      <div class="math"><div class="math-fallback">aₜ = b + W hₜ₋₁ + U xₜ
+hₜ = tanh(aₜ)
+oₜ = c + V hₜ
+ŷₜ = softmax(oₜ)  (when predicting a class)</div><div class="math-tex">\[\begin{aligned} a_t &= b + W h_{t-1} + U x_t \\ h_t &= \tanh(a_t) \\ o_t &= c + V h_t \\ \hat y_t &= \operatorname{softmax}(o_t) \end{aligned}\]</div></div>
+      <p><strong>Read the symbols:</strong> <em>U</em> maps input to hidden state; <em>W</em> carries information from the previous hidden state; <em>V</em> maps hidden state to output. <em>b</em> and <em>c</em> are biases. These same parameters are applied at every step.</p>
+      <div class="slides"><figure><button type="button" aria-label="Enlarge lecture slide 10"><img src="ai222_05_assets/rnn-10.png" alt="Lecture equations for external input and hidden state" loading="lazy"></button><figcaption>Slide 10 · hₜ depends on hₜ₋₁ and xₜ; it encodes previous inputs in a lossy way.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 13"><img src="ai222_05_assets/rnn-13.png" alt="Unrolled sequence-to-sequence RNN with shared U W and V" loading="lazy"></button><figcaption>Slide 13 · Unrolling shows repeated cells and the shared U, W, V matrices.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 14"><img src="ai222_05_assets/rnn-14.png" alt="Lecture equations for a sequence-to-sequence RNN" loading="lazy"></button><figcaption>Slide 14 · The lecture’s explicit update, output, softmax, and loss equations.</figcaption></figure></div>
+      <div class="stepper" aria-label="Interactive three-step RNN calculation"><h3>Try a tiny unrolled RNN</h3><p>For arithmetic practice, replace tanh with the identity and use the scalar rule <strong>hₜ = 0.5hₜ₋₁ + xₜ</strong>. Let h₀ = 0 and the inputs be [1, 1, 0]. Select a step to see the running state.</p><div class="controls"><button class="step" type="button" data-step="1" aria-pressed="true">Step 1</button><button class="step" type="button" data-step="2" aria-pressed="false">Step 2</button><button class="step" type="button" data-step="3" aria-pressed="false">Step 3</button></div><div id="step-output" aria-live="polite"><strong>Step 1:</strong> x₁ = 1, so h₁ = 0.5(0) + 1 = <strong>1</strong>. The state now carries information from the first input.</div></div>
+      <div class="callout"><strong>Shape check:</strong> If each xₜ has 3 values, each hidden state has 2, and each output has 4 classes, then U is 2×3, W is 2×2, and V is 4×2. Matrix rows match the size of the vector being produced.</div>
+    </section>
+
+    <section id="patterns">
+      <span class="kicker">Choose the right diagram</span><h2>3. What shape is the answer?</h2>
+      <p>Before drawing an RNN, decide whether the task needs one output or many. The input and output lengths may be different.</p>
+      <table><thead><tr><th>Pattern</th><th>Input → output</th><th>Lecture example</th><th>How to explain it</th></tr></thead><tbody><tr><td>Sequence → vector</td><td>Many steps → one label or vector</td><td>Classify a word sequence</td><td>Read the whole sequence, then use the final summarized state for one answer.</td></tr><tr><td>Sequence → sequence</td><td>Many steps → many outputs</td><td>Story generation or image styling</td><td>Produce an output at each step; losses may be summed across steps.</td></tr><tr><td>Vector → sequence</td><td>One fixed input → variable-length sequence</td><td>Image captioning</td><td>Condition the recurrent generator on an image and emit words successively.</td></tr><tr><td>Encoder → decoder</td><td>Input sequence → output sequence, possibly different lengths</td><td>Translation</td><td>Encode an input sequence into context C; decode a new sequence from it.</td></tr></tbody></table>
+      <div class="slides"><figure><button type="button" aria-label="Enlarge lecture slide 12"><img src="ai222_05_assets/rnn-12.png" alt="Unrolled sequence-to-vector RNN lecture diagram" loading="lazy"></button><figcaption>Slide 12 · Sequence-to-vector waits for the final output, as in classification.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 22"><img src="ai222_05_assets/rnn-22.png" alt="Sequence-to-vector example of classifying a phrase" loading="lazy"></button><figcaption>Slide 22 · “Plant with pink flowers” becomes one output vector.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 23"><img src="ai222_05_assets/rnn-23.png" alt="Vector-to-sequence image captioning RNN" loading="lazy"></button><figcaption>Slide 23 · A fixed image conditions a variable-length caption.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 27"><img src="ai222_05_assets/rnn-27.png" alt="Encoder-decoder RNN translating a Filipino phrase to English" loading="lazy"></button><figcaption>Slide 27 · The encoder summarizes “Tayo ay masaya”; the decoder emits “We are happy.” Input and output lengths need not match.</figcaption></figure></div>
+      <div class="exercise"><strong>Essay move:</strong> Name the task’s input and output shapes first. Then explain where a hidden state or context vector enters the diagram. For translation, explicitly allow input length <em>n</em> to differ from output length <em>m</em>.</div>
+    </section>
+
+    <section id="teacher">
+      <span class="kicker">Training versus use</span><h2>4. Teacher forcing changes what feeds the next step</h2>
+      <p>During training, a decoder may be given the <em>correct previous output</em> as input to the next step. That is teacher forcing. At test time, the correct future outputs are unavailable, so the decoder must feed back its <em>own prediction</em>. One mistake can then influence later predictions.</p>
+      <div class="grid"><div class="card"><h3>Training</h3><p>Previous ground-truth token → next prediction. Known targets can be prepared in advance.</p></div><div class="card"><h3>Inference</h3><p>Previous predicted token → next prediction. Generating the next token must wait for the current prediction.</p></div></div>
+      <div class="slides"><figure><button type="button" aria-label="Enlarge lecture slide 16"><img src="ai222_05_assets/rnn-16.png" alt="Lecture statement that an ordinary RNN is inherently sequential" loading="lazy"></button><figcaption>Slide 16 · A hidden-state chain has a step-to-step dependency.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 17"><img src="ai222_05_assets/rnn-17.png" alt="Teacher-forcing diagram using target outputs during training" loading="lazy"></button><figcaption>Slide 17 · Ground-truth y at the previous step acts as the next step’s feedback during training.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 19"><img src="ai222_05_assets/rnn-19.png" alt="Teacher-forced RNN at testing using predicted outputs" loading="lazy"></button><figcaption>Slide 19 · At test time the model must use its own outputs, restoring a serial generation dependency.</figcaption></figure></div>
+      <div class="callout"><strong>Nuance for an essay:</strong> Teacher forcing removes the wait for a <em>predicted output</em> during training in the lecture’s feedback design. If hidden states themselves depend on hₜ₋₁, that hidden-state chain still has to be computed in order.</div>
+    </section>
+
+    <section id="variants">
+      <span class="kicker">More context</span><h2>5. Bidirectional RNNs and encoder–decoders</h2>
+      <p>A one-way RNN sees the past as it moves forward. A bidirectional RNN has a second pass from the other direction, so a position can use both earlier and later context. This works when the full input sequence is available; it cannot use future input that has not arrived yet in a live stream.</p>
+      <div class="slides"><figure><button type="button" aria-label="Enlarge lecture slide 25"><img src="ai222_05_assets/rnn-25.png" alt="Bidirectional RNN with forward and backward hidden states" loading="lazy"></button><figcaption>Slide 25 · Forward and backward states combine past and future input context.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 26"><img src="ai222_05_assets/rnn-26.png" alt="Lecture word ambiguity example for bidirectional context" loading="lazy"></button><figcaption>Slide 26 · Later words can disambiguate an earlier prediction when the whole input is known.</figcaption></figure></div>
+      <p>For sequence-to-sequence translation, an encoder reads the source, and its final summary is passed as a context vector <em>C</em> to a decoder. This is an intuitive pattern, but asking one fixed vector to hold a long source sequence creates a bottleneck.</p>
+      <div class="exercise"><strong>Compare in an answer:</strong> Bidirectionality changes <em>which input context</em> each position can use. Encoder–decoder changes <em>how one input sequence is converted into another output sequence</em>.</div>
+    </section>
+
+    <section id="limits">
+      <span class="kicker">Why the next architecture matters</span><h2>6. Long sequences are hard</h2>
+      <p>Information and training signals must travel through many recurrent steps. Repeated multiplication by weights can make a signal shrink toward zero or grow too large. That is why a basic RNN struggles with long-term dependencies.</p>
+      <div class="math"><div class="math-fallback">Toy scalar recurrence: hₜ = w hₜ₋₁  ⇒  hₜ = wᵗ h₀
+If w = 0.5: after 4 steps the factor is 0.0625 (shrinks).
+If w = 2:   after 4 steps the factor is 16 (grows).</div><div class="math-tex">\[h_t = w h_{t-1} \quad\Longrightarrow\quad h_t = w^t h_0\]\[0.5^4=0.0625\quad\text{(shrinks)},\qquad 2^4=16\quad\text{(grows)}\]</div></div>
+      <p>In a full network, the gradient calculation is more involved, but this toy power illustrates the decay/explosion intuition on slide 30. The lecture lists skip connections, leaky units, gradient clipping, LSTMs, and GRUs as responses. An LSTM uses gates to control what information is forgotten, added, and exposed.</p>
+      <div class="slides"><figure><button type="button" aria-label="Enlarge lecture slide 30"><img src="ai222_05_assets/rnn-30.png" alt="Lecture slide on long-term dependencies and eigenvalues" loading="lazy"></button><figcaption>Slide 30 · Repeated state transformations can make signals vanish or explode.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 31"><img src="ai222_05_assets/rnn-31.png" alt="Lecture list of approaches to long-term dependency problems" loading="lazy"></button><figcaption>Slide 31 · The lecture’s remedy list includes clipping, skip paths, leaky units, LSTM, and GRU.</figcaption></figure><figure><button type="button" aria-label="Enlarge lecture slide 33"><img src="ai222_05_assets/rnn-33.png" alt="LSTM cell and its forget input and output gates" loading="lazy"></button><figcaption>Slide 33 · The LSTM’s forget, input, and output gates regulate memory flow.</figcaption></figure></div>
+      <div class="callout"><strong>Bridge to Transformer:</strong> Recurrent generation has step-to-step dependencies, and the state must compress earlier context. The next lecture explores the Transformer’s different way of relating positions in a sequence.</div>
+      <div class="slides"><figure><button type="button" aria-label="Enlarge lecture slide 35"><img src="ai222_05_assets/rnn-35.png" alt="RNN summary slide mentioning sequential learning and Transformers" loading="lazy"></button><figcaption>Slide 35 · The lecture itself closes by connecting RNN strengths and speed limits to the Transformer.</figcaption></figure></div>
+    </section>
+
+    <section id="practice">
+      <span class="kicker">Exam rehearsal</span><h2>7. Short essays and light calculations</h2>
+      <p>Try each prompt before opening the answer. A strong response usually identifies the task, explains the time-step flow, and states one limitation or condition.</p>
+      <details><summary>Explain why an RNN is suited to sequential data. Compare it with a CNN.</summary><p>A sequence has an order that can change the meaning of an item. An RNN updates hₜ from hₜ₋₁ and xₜ, so its current representation includes earlier context. The same recurrent parameters are reused at every step. A CNN also reuses weights, but its shared kernels scan spatial locations to detect local image patterns. The basic RNN’s state chain requires ordered computation.</p></details>
+      <details><summary>Walk through one RNN step and name U, W, V, b, and c.</summary><p>Compute aₜ = b + W hₜ₋₁ + U xₜ, then hₜ = tanh(aₜ). For a class output, compute oₜ = c + Vhₜ and ŷₜ = softmax(oₜ). U maps input to hidden state, W maps previous state to new state, V maps hidden state to output, and b and c are biases. All are shared across steps.</p></details>
+      <details><summary>With h₀ = 0, hₜ = 0.5hₜ₋₁ + xₜ, and x = [1, 1, 0], find h₁, h₂, h₃.</summary><p>h₁ = 0.5(0)+1 = 1; h₂ = 0.5(1)+1 = 1.5; h₃ = 0.5(1.5)+0 = 0.75. This is an arithmetic toy using identity activation, not the lecture’s tanh cell.</p></details>
+      <details><summary>If input, hidden, and class sizes are 3, 2, and 4, what are the shapes of U, W, V?</summary><p>U is 2×3 so Uxₜ has size 2. W is 2×2 so Whₜ₋₁ has size 2. V is 4×2 so Vhₜ has size 4 logits.</p></details>
+      <details><summary>Contrast teacher forcing at training time with inference.</summary><p>Training can feed the known correct previous output into the next decoder step. At inference, the correct next outputs are unknown, so the model feeds back its previous prediction. Prediction errors can compound. This feedback distinction does not remove a separate hidden-state recurrence when one is present.</p></details>
+      <details><summary>Which RNN pattern fits sentiment classification, image captioning, and translation?</summary><p>Sentiment classification: sequence-to-vector, because many words yield one label. Image captioning: vector-to-sequence, because one image yields words. Translation: encoder–decoder sequence-to-sequence, because source and target sentences can differ in length.</p></details>
+      <details><summary>Why can a basic RNN fail on long-term dependencies? Give two remedies.</summary><p>Repeated transformations across time can make information or gradients shrink or explode, so distant evidence becomes difficult to learn from. The lecture lists gradient clipping, skip connections, leaky units, LSTM, and GRU. Clipping addresses exploding gradients; gated units help preserve or control useful memory.</p></details>
+      <details><summary>Compute the recurrence factor after four steps for w = 0.5 and w = 2.</summary><p>In hₜ = wᵗh₀, the factors are 0.5⁴ = 0.0625 and 2⁴ = 16. The first decays; the second grows. This is a simplified illustration of slide 30, not a full gradient derivation.</p></details>
+    </section>
+
+    <section><h2>Next: Transformer</h2><p>Carry this question forward: <strong>How can a model connect distant positions without passing all information through a single recurrent chain?</strong> The Transformer lecture develops a new answer. Keep the RNN ideas of sequence order, context, and sequence-to-sequence prediction in mind.</p><a href="06_transformer.html">Continue to the Transformer guide →</a></section>
+  </main>
+
+  <div class="viewer" id="slide-viewer" role="dialog" aria-modal="true" aria-label="Enlarged lecture slide" aria-hidden="true"><button class="close" type="button" aria-label="Close enlarged slide">×</button><div class="viewer-panel"><img alt=""><p></p></div></div>
+  <footer>Based on the supplied <em>RNN.pdf</em>. Images are direct captures of selected lecture slides. Explanations, toy arithmetic, and practice answers are study aids.</footer>
+  <script>
+    const viewer = document.querySelector('#slide-viewer');
+    const largeImage = viewer.querySelector('img');
+    const largeCaption = viewer.querySelector('p');
+    const closeButton = viewer.querySelector('.close');
+    let returnFocus = null;
+    function closeViewer() { viewer.classList.remove('open'); viewer.setAttribute('aria-hidden','true'); largeImage.removeAttribute('src'); if (returnFocus) returnFocus.focus(); }
+    document.querySelectorAll('figure button').forEach(button => button.addEventListener('click', () => {
+      const source = button.querySelector('img');
+      returnFocus = button;
+      largeImage.src = source.src;
+      largeImage.alt = source.alt;
+      largeCaption.textContent = button.parentElement.querySelector('figcaption').textContent;
+      viewer.classList.add('open');
+      viewer.setAttribute('aria-hidden','false');
+      closeButton.focus();
+    }));
+    closeButton.addEventListener('click',closeViewer);
+    viewer.addEventListener('click',event => { if (event.target === viewer) closeViewer(); });
+    document.addEventListener('keydown',event => { if (event.key === 'Escape' && viewer.classList.contains('open')) closeViewer(); });
+    const states = [
+      '<strong>Step 1:</strong> x₁ = 1, so h₁ = 0.5(0) + 1 = <strong>1</strong>. The state now carries information from the first input.',
+      '<strong>Step 2:</strong> x₂ = 1, so h₂ = 0.5(1) + 1 = <strong>1.5</strong>. The second state combines old context and new input.',
+      '<strong>Step 3:</strong> x₃ = 0, so h₃ = 0.5(1.5) + 0 = <strong>0.75</strong>. Earlier inputs still affect the state even though the current input is zero.'
+    ];
+    document.querySelectorAll('button.step').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('button.step').forEach(item => item.setAttribute('aria-pressed',String(item === button)));
+      document.querySelector('#step-output').innerHTML = states[Number(button.dataset.step)-1];
+    }));
+  </script>
+</body>
+</html>
