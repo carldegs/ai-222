@@ -1,0 +1,22 @@
+/* Optional visual companions shared by the AI 222 review guides. */
+.visual-resources{margin:3.5rem 0;padding:1.35rem;border:1px solid #cfe0eb;border-radius:18px;background:linear-gradient(135deg,#f3fbff,#f8fafc)}
+.visual-resources__eyebrow{margin:0 0 .25rem!important;color:#0b7774;font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.visual-resources__intro{max-width:760px;color:#52657a}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-top:1.1rem}
+.resource-card{display:flex;flex-direction:column;min-height:184px;padding:1.1rem 1.15rem;border:1px solid #d5e1e9;border-radius:14px;background:#fff;box-shadow:0 8px 22px #16334a0c}
+.resource-card__type{margin:0 0 .55rem;color:#0a628f;font-size:.72rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.resource-card h3{margin:0 0 .45rem;font-size:1.05rem!important;color:#15243a}
+.resource-card p{margin:0;color:#52657a;font-size:.92rem;line-height:1.5}
+.resource-card__action{display:inline-flex;align-items:center;gap:.4rem;margin-top:auto;padding-top:1rem;color:#0a628f!important;font-weight:800;text-decoration:none!important}
+.resource-card__action:hover{text-decoration:underline!important}
+.video-card{overflow:hidden;padding:0}
+.video-card__body{display:flex;flex:1;flex-direction:column;padding:1.1rem 1.15rem}
+.video-card__play{display:flex;align-items:center;justify-content:center;gap:.55rem;width:100%;min-height:72px;border:0;background:linear-gradient(120deg,#123550,#176ba3);color:#fff;font:700 .94rem/1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer}
+.video-card__play:hover{background:linear-gradient(120deg,#0d2940,#0b7774)}
+.video-card iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+.resource-diagram{display:flex;align-items:stretch;gap:.45rem;overflow-x:auto;margin:1.1rem 0 0;padding:.7rem;background:#fff;border:1px solid #d5e1e9;border-radius:12px}
+.resource-diagram span{display:grid;place-items:center;min-width:118px;padding:.62rem .7rem;border-radius:9px;background:#e8f3f8;color:#173d5c;font-size:.82rem;font-weight:750;text-align:center}
+.resource-diagram b{display:grid;place-items:center;color:#0b7774;font-size:1.25rem}
+.visual-stepper{margin-top:1.1rem;padding:1rem;border-radius:12px;background:#fff;border:1px solid #d5e1e9}
+.visual-stepper__steps{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0}.visual-stepper button{padding:.45rem .65rem;border:1px solid #b8cedc;border-radius:999px;background:#f6fbfe;color:#173d5c;font:700 .8rem/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer}.visual-stepper button[aria-pressed="true"]{border-color:#176ba3;background:#176ba3;color:#fff}.visual-stepper__output{margin:0;padding:.75rem .9rem;border-radius:8px;background:#eff7fc;color:#36516a;font-size:.9rem}
+@media print{.visual-resources{background:#fff}.video-card__play{display:none}.video-card iframe{display:none}}
