@@ -49,11 +49,12 @@
       ]
     },
     'llm-intro': {
-      heading: 'Follow a token through generation',
-      intro: 'See causal masking and repeated next-token prediction in motion.',
+      heading: 'Walk through the generation loop once more',
+      intro: 'Use the examples on this page to connect the probabilities to the text you see.',
+      diagram: ['Prompt', 'Next-token probabilities', 'Choose a token', 'Append to context', 'Predict again'],
       items: [
-        { type: 'Interactive website', title: 'Transformer Explainer', text: 'Explore token flow and attention inside a small Transformer.', url: 'https://poloclub.github.io/transformer-explainer/', action: 'Open interactive ↗' },
-        { type: 'Visual reading', title: 'The Illustrated GPT-2', text: 'A visual bridge from causal masking to next-token generation.', url: 'https://jalammar.github.io/illustrated-gpt2/', action: 'Open illustrated guide ↗' }
+        { type: 'Worked example', title: 'Build a sequence probability', text: 'Follow “the cat sat” and multiply each probability by the running product.', url: '#probability', action: 'Revisit the example →' },
+        { type: 'Interactive example', title: 'Try a different temperature', text: 'Keep the token scores fixed and see how temperature changes the next-token probabilities.', url: '#generation', action: 'Try the slider →' }
       ]
     },
     'llm-data': {
