@@ -1,0 +1,130 @@
+.tutor h2{margin-bottom:20px}
+.tutor h3{font:400 25px/1.2 Georgia,serif;margin:25px 0 12px;scroll-margin-top:24px}
+.tutor h3:focus{outline:none}
+.tutor .body-copy{margin:0 0 12px}
+.tutor-practice-link{font-weight:600;font-size:11px;text-underline-offset:3px}
+.tutor-lesson-picker{display:none}
+.lab-controls select,.tutor-lesson-picker select{min-width:0;max-width:100%;border:1px solid #d7ded0;border-radius:5px;background:#fffefb;color:var(--ink);padding:6px 8px;font-size:12px}
+@media(max-width:850px){
+ .tutor-lesson-picker{display:flex;align-items:center;gap:12px;padding:9px 0}
+ .tutor-lesson-picker label{font-size:11px;color:var(--green);font-weight:700;white-space:nowrap}
+ .tutor-lesson-picker select{flex:1}
+}
+.tutor-sources{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:14px 0;color:#626e65;font-size:11px}
+.tutor-source{display:inline;background:none;border:0;border-bottom:1px dotted #8b9d88;color:var(--green);font-size:inherit;padding:0;line-height:inherit;text-align:left}
+.tutor-source:hover{background:var(--wash)}
+.tutor-source span{font-size:.8em}
+.tutor-sources .tutor-source{background:var(--wash);border:1px solid #d7ded0;border-radius:4px;padding:2px 6px}
+.tutor-figure{margin:17px 0 22px}
+.tutor-figure button[data-enlarge]{position:relative;display:block;width:100%;padding:0;border:1px solid #d7ded0;border-radius:8px;overflow:hidden;background:white}
+.tutor-figure img{width:100%;height:auto;display:block}
+.tutor-spotlight{position:absolute;border:2px solid #1e6b55;border-radius:4px;pointer-events:none}
+.tutor-figure figcaption{font-size:12px;line-height:1.55;color:#4c6055;margin-top:8px}
+.tutor-figure figcaption button{margin-right:4px;font-weight:600}
+.tutor-lab,.tutor-flow{margin:18px 0;background:#edf2e9;border:1px solid #d6e0d2;border-radius:10px;padding:17px 18px}
+.tutor-lab h4{font:400 22px/1.2 Georgia,serif;margin:4px 0 7px}
+.tutor-lab p,.tutor-flow p{margin:6px 0;font-size:13px;line-height:1.6;color:#42584c}
+.lab-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:13px 0 10px}
+.lab-controls label{font-size:12px;font-weight:650;margin-left:3px}
+.lab-controls label:first-child{margin-left:0}
+.lab-controls input{flex:1;min-width:100px;accent-color:var(--green)}
+.lab-controls button{padding:7px 10px}
+.lab-plot:empty{display:none}
+.lab-plot{max-width:550px;margin:6px auto 0}
+.lab-plot svg{width:100%;height:auto;display:block;overflow:visible}
+.lab-plot text{fill:#455a50;font:12px system-ui,sans-serif}
+.plot-axis,.plot-grid,.plot-curve{fill:none;vector-effect:non-scaling-stroke}
+.plot-axis{stroke:#7b897e}
+.plot-grid{stroke:#a0ada1;stroke-dasharray:3 4}
+.plot-curve{stroke:var(--green);stroke-width:2}
+.plot-dot{fill:var(--green);stroke:#fff;stroke-width:1.5px}
+.plot-old{fill:#faf9f5;stroke:#ad783a;stroke-width:2px}
+.lab-result dl{display:flex;flex-wrap:wrap;gap:5px 19px;margin:5px 0}
+.lab-result dt{font-size:11px;color:#435b50}
+.lab-result dd{margin:3px 0 0;font-size:16px;font-weight:650;font-variant-numeric:tabular-nums}
+.tutor-flow figcaption{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;font-size:15px}
+.tutor-flow figcaption span{font-size:11px;color:#4c6055}
+.tutor-flow ol{list-style:none;padding:0;margin:10px 0;font-size:12px}
+.tutor-flow li{position:relative;padding:8px 10px;margin:0 0 14px;border:1px solid #d6e0d2;border-radius:6px;background:#fffefb;display:grid;gap:3px}
+.tutor-flow li:not(:last-child)::after{content:"↓";position:absolute;left:12px;top:100%;color:var(--green);line-height:14px}
+.tutor-check,.tutor-notes{border:1px solid #dce2d6;border-radius:8px;padding:11px 14px;margin:15px 0;background:#fffefb}
+.tutor-check summary,.tutor-notes summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--green);line-height:1.6}
+.tutor-check summary .eyebrow{display:inline-block;margin-right:8px}
+.tutor-check p,.tutor-bridge{font-size:13px;line-height:1.6;margin:9px 0 0}
+.tutor-bridge{border-left:2px solid #8fa789;padding-left:11px;color:#43594d}
+.tutor-bridge b{display:block;color:var(--green)}
+.tutor-actions{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:20px 0}
+.tutor-notes .section-label{font:inherit;margin:24px 0 14px;font-size:14px;font-weight:650}
+.tutor-unread{margin-top:2px}
+.tutor-lesson-links{display:flex;flex-wrap:wrap;gap:5px 12px;justify-content:flex-end}
+button.tutor-practice-link{color:var(--green);background:none;border:0;padding:0;text-decoration:underline}
+.tutor-equations{scroll-margin-top:24px}
+.tutor-equations .section-label{margin:19px 0 10px}
+.lab-slide {
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #cbd8c8;
+  border-radius: 6px;
+  background: white;
+}
+.lab-slide img { display: block; width: 100%; height: auto; }
+.lab-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  max-width: 240px;
+  margin: 10px auto;
+}
+.lab-tile {
+  display: grid;
+  place-content: center;
+  padding: 6px 2px;
+  min-height: 33px;
+  border: 1px solid #b7cdbb;
+  border-radius: 4px;
+  background: #dce9dd;
+  color: #234b3a;
+  font-size: 11px;
+  text-align: center;
+}
+.lab-tile-accent { background: #f5e4c6; border-color: #dcc097; color: #654317; }
+.lab-folds { max-width: none; }
+.lab-folds .lab-tile { min-height: 48px; }
+.lab-loss-table { width: 100%; font-size: 12px; margin: 9px 0; }
+.lab-loss-table th,.lab-loss-table td { padding: 4px; }
+.lab-loss-table td { width: 37%; }
+.lab-best { background: #dce9dd; }
+.lab-loss-bar {
+  display: block;
+  padding: 2px 4px;
+  background: linear-gradient(90deg, #bad6c6 var(--loss-width), transparent var(--loss-width));
+}
+.lab-loss-bar.lab-validation {
+  background: linear-gradient(90deg, #e8c996 var(--loss-width), transparent var(--loss-width));
+}
+.lab-method-map { list-style: none; padding: 0; margin: 10px 0 0; font-size: 12px; }
+.lab-method-map li { margin-bottom: 7px; }
+.lab-method-map li:last-child { margin-bottom: 0; }
+.tutor-discussion+.tutor-discussion{border-top:1px solid var(--line);margin-top:22px}
+.tutor .worked-problems{scroll-margin-top:24px}
+.tutor .tutor-context {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--green);
+  margin: 0 0 18px;
+}
+.lab-penalty-table {
+  width: 100%;
+  margin: 10px 0;
+  font-size: 12px;
+}
+.lab-penalty-table caption {
+  text-align: left;
+  font-weight: 650;
+  margin-bottom: 6px;
+}
+.lab-penalty-table th,.lab-penalty-table td {
+  padding: 6px 8px;
+  text-align: left;
+}

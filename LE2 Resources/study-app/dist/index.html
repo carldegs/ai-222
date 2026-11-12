@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="An illustrated, slide-linked AI 222 study guide. Learn optimization, review formulas, and practice without a calculator."><title>Optimization · AI 222 Study Companion</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' rx='14' fill='%232a5d50'/%3E%3Ctext x='13' y='43' font-size='40' fill='white'%3E∇%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="vendor/katex/katex.min.css"><link rel="stylesheet" href="style.css?v=practice-exam-2"><link rel="stylesheet" href="optimization-tutor.css?v=7"><script defer src="vendor/katex/katex.min.js"></script><script type="module" src="app.mjs?v=segmentation-1"></script></head>
+<body>
+<aside class="sidebar">
+ <a class="brand" href="./"><span class="brand-icon">∇</span><span>Margin<span class="brand-sub">YOUR STUDY COMPANION</span></span></a>
+ <div class="course">AI 222 <span>EXAM PREP</span></div>
+ <div class="eyebrow">YOUR DECKS</div>
+ <div id="deck-navigation"></div>
+ <nav id="topics" aria-label="Study topics"></nav>
+ <div class="sidebar-bottom"><div class="progress-label"><span>Reading progress</span><b id="progress-label">0 / 10</b></div><div class="progress-track"><div id="progress-fill"></div></div><small id="save-status">Saved in this browser</small></div>
+</aside>
+<div class="workspace">
+ <header class="topbar"><div>AI 222 <span>/</span> Study guides <span>/</span> <strong>Optimization</strong></div><button id="toggle-slides" class="button subtle" aria-expanded="true">◧ <span>Hide slides</span></button></header>
+ <div class="workspace-title"><div><div class="eyebrow">DECK 01 <span> / </span> ROWEL ATIENZA · UP DILIMAN</div><h1>Optimization</h1><p>Understand the ideas. Keep the essentials. Test what sticks.</p></div><span class="pill">✎ &nbsp; No calculator needed</span></div>
+ <nav class="tabs" aria-label="Study sections"><button data-tab="learn" class="selected">Learn <span>01</span></button><button data-tab="reference">Quick reference <span>02</span></button><button data-tab="test">Test yourself <span>03</span></button><button data-tab="further">Further learning <span>04</span></button></nav>
+ <div class="study-layout" id="study-layout"><main id="content" tabindex="-1"></main><div id="divider" role="separator" aria-label="Resize slide panel" aria-orientation="vertical" tabindex="0"></div><aside class="slides" id="slides" aria-label="Original deck">
+ <div class="panel-heading"><div><span class="eyebrow">THE SOURCE</span><h2>Original slides</h2></div><a href="assets/optimizer.pdf" target="_blank" rel="noopener" class="icon-link" title="Open original PDF" aria-label="Open original PDF">↗</a></div>
+ <div class="slide-stage"><button id="enlarge-slide" aria-label="Enlarge current slide"><img id="slide-image" src="assets/slide-02.webp" alt="Original optimization slide 2"></button></div>
+ <div class="slide-controls"><button id="prev-slide" class="icon-button" aria-label="Previous slide">←</button><label>Slide <input id="slide-number" type="number" min="1" max="44" value="2" aria-label="Slide number"> <span>/ 44</span></label><button id="next-slide" class="icon-button" aria-label="Next slide">→</button></div>
+ <p class="slide-hint">Click the slide to enlarge. References in the guide take you straight to the source.</p>
+ <div class="slide-note"><span>↳</span><div><b>Keep the context close.</b><p>The guide explains the ideas; the original deck preserves your instructor’s wording and notation.</p></div></div>
+ <div class="related"><span class="eyebrow">THIS LESSON’S SLIDES</span><div id="related-slides"></div></div>
+ <div class="source-credit">Source: <i>Optimization</i>, Rowel Atienza, University of the Philippines, updated 2025. Figures reproduced from your supplied deck for personal study.</div>
+ </aside></div>
+</div>
+<dialog id="image-dialog"><button id="close-dialog" class="button" autofocus>Close ✕</button><img id="dialog-image" alt="Enlarged original deck slide"><p id="dialog-caption"></p></dialog>
+<div id="announcement" role="status" class="sr-only"></div>
+</body></html>
