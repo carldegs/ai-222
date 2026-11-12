@@ -119,7 +119,7 @@ export const detectionLessons = [
     section(40, 41, 'Lower the score when deletion may be too harsh', [
       '[[40:Soft-NMS]] keeps a lower-scoring box in play with a reduced score. A higher IoU produces a larger reduction. Re-rank after changing the scores, since the next-best box may now be somewhere else.',
       'The [[41:pseudocode]] shows the Gaussian rule. A later score filter can still remove a low-scoring box. This gives close real objects a chance to survive if their evidence remains strong.'
-    ], {formulas:['softNms'],
+    ], {formulas:['softNms'],lab:'nms',
       check:['If the two predictions have IoU zero, how much does Gaussian Soft-NMS lower the second score?', 'It leaves the score unchanged. The exponential factor is 1 when the overlap is zero.']})
   ]),
   lesson('Separate box fit, false alarms, and missed objects',

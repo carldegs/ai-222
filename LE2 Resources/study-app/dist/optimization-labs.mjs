@@ -1,4 +1,5 @@
 import {choice, range, labFrame, readout} from './tutor-lab.mjs';
+import {mountOptimizerPaths, optimizerPathMarkup} from './optimizer-paths.mjs';
 
 const number = n => new Intl.NumberFormat('en', {maximumSignificantDigits: 5}).format(n).replace('-', '−');
 const signed = n => (n > 0 ? '+' : '') + number(n);
@@ -14,8 +15,6 @@ const labs = {
     choice('lab-multiplier','Multiplier (λ)',[[.5,'1/2'],[2,'2']],.5) + range('lab-repeats','Repetitions (t)',6,3)],
   gradient: ['Step across the loss curve', 'Start at θ = 4. Try 1/2, then reset and try 5/2. Compare the loss before and after.',
     choice('lab-rate','Learning rate (ε)',rates,.5) + advance('Take a step')],
-  momentum: ['Give momentum a new gradient', 'Start with v = −2 and keep ε = 1/2. Try g = 2, then reset and try g = −2.',
-    choice('lab-g','Gradient (g)',gradients,2) + choice('lab-alpha','Memory (α)',[[0,'0'],[.5,'1/2'],[.9,'9/10']],.5) + advance('Update velocity')],
   adagrad: ['Build up squared-gradient history', 'Start at r = 0 and keep ε = 1/2. Try g = 4 a few times. Then switch to g = 2.',
     choice('lab-g','Gradient (g)',gradients,4) + advance('Apply gradient')],
   rmsprop: ['Watch the history fade', 'Start with r = 16. Set g = 2 and repeat. This example uses ρ = 1/2 and ε = 1/2.',
@@ -28,6 +27,7 @@ const labs = {
 };
 
 export function labMarkup(id) {
+  if (id === 'optimizer-paths') return optimizerPathMarkup();
   const [title, prompt, controls] = labs[id];
   return labFrame(id, title, prompt, controls);
 }
@@ -60,14 +60,19 @@ function rateAt(schedule, epoch) {
 }
 
 export function mountLab(root) {
-  const lab = root.querySelector('[data-tutor-lab]');
-  if (!lab) return;
+  for (const lab of root.querySelectorAll('[data-tutor-lab]')) {
+    if (lab.dataset.tutorLab === 'optimizer-paths') mountOptimizerPaths(lab);
+    else mountReadoutLab(lab);
+  }
+}
+
+function mountReadoutLab(lab) {
   const id = lab.dataset.tutorLab;
   const control = name => lab.querySelector('#lab-'+name);
   const value = name => Number(control(name).value);
   const plot = lab.querySelector('.lab-plot');
   const result = lab.querySelector('.lab-result');
-  const initial = () => ({theta: 4, previous: null, v: -2, r: id==='rmsprop'?16:0, s: 0, t: 0, last: null});
+  const initial = () => ({theta: 4, previous: null, r: id==='rmsprop'?16:0, s: 0, t: 0, last: null});
   let state = initial();
 
   function display(values, message = '', visual = '') {
@@ -76,7 +81,7 @@ export function mountLab(root) {
   }
 
   function render() {
-    const {theta, previous, r, s, v, t, last} = state;
+    const {theta, previous, r, s, t, last} = state;
     if (id==='prediction') {
       const p = value('prediction');
       display([['Prediction (θ)',p],['Target',4],['Distance',Math.abs(p-4)],['Squared loss',(p-4)**2]], '',
@@ -102,9 +107,6 @@ export function mountLab(root) {
         previous===null?'Choose a learning rate and take a step.':
           `Last move: ${number(previous)} → ${number(theta)}. Loss ${loss(theta)===loss(previous)?'stayed the same':loss(theta)>loss(previous)?'rose':'fell'} from ${number(loss(previous))} to ${number(loss(theta))}.`,
         chart({points,xMin:-max,xMax:max,yMax:loss(max),dots:[...(previous===null?[]:[[previous,loss(previous),true]]),[theta,loss(theta)]],horizontal:'Parameter θ',vertical:'Loss'}));
-    } else if (id==='momentum') {
-      display(last?[['Old contribution (αv)',signed(last.old)],['New contribution (−εg)',signed(last.fresh)],['Move (new v)',signed(v)]]:[['Starting velocity (v)',number(v)]],
-        last?`Step ${t}. The new velocity is added to θ.`:'Choose a gradient and update the velocity.');
     } else if (['adagrad','rmsprop','adam'].includes(id)) {
       if (!last) return display([['History (r)',number(r)],...(id==='adam'?[['Direction (s)',number(s)]]:[])], 'Apply a gradient to see the update.');
       const values = [['Previous r → new r',`${number(last.r)} → ${number(r)}`]];
@@ -129,10 +131,6 @@ export function mountLab(root) {
       state.previous = state.theta;
       state.theta -= value('rate')*state.theta;
       if (state.t===12) stepButton.disabled = true;
-    } else if (id==='momentum') {
-      const old = value('alpha')*state.v, fresh = -.5*value('g');
-      state.v = old + fresh;
-      state.last = {old, fresh};
     } else {
       const g = value('g'), r = state.r;
       state.r = id==='adagrad'?r+g*g:(r+g*g)/2;

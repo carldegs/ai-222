@@ -1,4 +1,5 @@
 import {labFrame, range, readout} from '../tutor-lab.mjs';
+import {mountNmsLab, nmsLabMarkup} from './nms-walkthrough.mjs';
 
 const labs = {
   overlap: {
@@ -44,12 +45,17 @@ const labs = {
 };
 
 export function detectionLabMarkup(id) {
+  if (id === 'nms') return nmsLabMarkup('detection');
   const {title,prompt,controls} = labs[id];
   return labFrame(id,title,prompt,controls);
 }
 
 export function mountDetectionLabs(container) {
   for (const root of container.querySelectorAll('[data-tutor-lab]')) {
+    if (root.dataset.tutorLab === 'nms') {
+      mountNmsLab(root);
+      continue;
+    }
     const lab = labs[root.dataset.tutorLab];
     const update = () => {
       const [plot,result] = lab.draw(root);

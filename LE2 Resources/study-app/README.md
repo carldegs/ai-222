@@ -27,11 +27,11 @@ Learn groups related slides into lessons in deck order. The sidebar and lesson n
 
 The decks include beginner explanations, equation context, compact symbol tables, inline and display KaTeX, worked solutions, caveats, and source-linked terminology. Quick reference offers formula and concept search. Test yourself opens a practice exam with per-question solutions and marks. It also offers theory drills, computations, flashcards, and weak-question review. Further learning links to original sources.
 
-Optimization also includes eight expanded minibatch advantages/tradeoffs. Regularization covers generalization/capacity, L1/L2, MLE and Gaussian residual models, MAP and Gaussian priors, label-preserving augmentation, STRAug, CutOut/MixUp/CutMix, AgMax/RandAugment, noise/domain randomization, multi-task learning, tied parameters, early stopping, dropout and cross-validation. Supplements and slide simplifications are labeled explicitly.
+Optimization includes a step-through comparison of SGD, momentum, and Nesterov on shared toy loss surfaces. It also explains eight minibatch advantages and tradeoffs. Regularization covers generalization/capacity, L1/L2, MLE and Gaussian residual models, MAP and Gaussian priors, label-preserving augmentation, STRAug, CutOut/MixUp/CutMix, AgMax/RandAugment, noise/domain randomization, multi-task learning, tied parameters, early stopping, dropout and cross-validation. The augmentation demo uses the deck’s bird and cat photos to compare CutOut, MixUp, and CutMix. Supplements and slide simplifications are labeled explicitly.
 
-Detection covers box coordinates and anchors, SSD and YOLO, IoU and AP, Fast and Faster R-CNN, FPN, RetinaNet, FSAF, and FCOS. It includes interactive IoU and centerness demos.
+Detection covers box coordinates and anchors, SSD and YOLO, IoU and AP, Fast and Faster R-CNN, FPN, RetinaNet, FSAF, and FCOS. It includes interactive IoU, centerness, and hard and Soft-NMS demos.
 
-Segmentation covers pixel and instance labels, FCN and PSPNet, Mask R-CNN and Mask Scoring R-CNN, YOLACT, Cascade R-CNN and HTC, rotated regions, and SAM 2. Its demos illustrate RoIAlign interpolation, prototype assembly, and video memory.
+Segmentation covers pixel and instance labels, FCN and PSPNet, Mask R-CNN and Mask Scoring R-CNN, YOLACT, Cascade R-CNN and HTC, rotated regions, and SAM 2. Its demos illustrate 2D RoIAlign interpolation, prototype assembly, greedy versus Fast NMS, and video memory.
 
 All source pages and original PDFs are included locally. Concept links open the exact source page. The slide panel supports resizing, hiding, enlargement and direct PDF access. External appendix links require internet. Mobile refinement is deferred.
 
@@ -61,6 +61,6 @@ Write each understanding check so a reader arriving directly at the slide can an
 
 Inline formulas use explicit `$...$` markup, escaped before DOM insertion. If changing entry scripts or shared runtime contracts, update the asset-version query in the deck HTML files to avoid stale browser caches. Serve `dist/` over HTTP.
 
-Figures and source PDFs remain attributed to the instructor for personal study. Explanations and practice questions are authored supplements, not predictions of exam coverage. KaTeX's MIT license is included at `dist/vendor/katex/LICENSE`.
+Figures and source PDFs remain attributed to the instructor for personal study. Explanations and practice questions are authored supplements, not predictions of exam coverage. KaTeX's MIT license is included at `dist/vendor/katex/LICENSE`. The locally served D3 7.9.0 browser bundle and its ISC license are in `dist/vendor/d3/`.
 
 Hosting remains pending explicit permission to export the supplied material; this implementation is available locally.

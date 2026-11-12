@@ -3,9 +3,9 @@ export const choice = (id, label, options, selected) => `<label for="${id}">${la
 export const range = (id, label, max, initial, min = 0) =>
   `<label for="${id}">${label}</label><input id="${id}" type="range" min="${min}" max="${max}" value="${initial}">`;
 export function labFrame(id, title, prompt, controls) {
-  return `<section class="tutor-lab" data-tutor-lab="${id}" aria-labelledby="lab-title">
+  return `<section class="tutor-lab" data-tutor-lab="${id}" aria-labelledby="lab-title-${id}">
     <div class="eyebrow">TRY IT · TEACHING DEMO</div>
-    <h4 id="lab-title">${title}</h4><p>${prompt}</p>
+    <h4 id="lab-title-${id}">${title}</h4><p>${prompt}</p>
     <div class="lab-controls">${controls}</div>
     <div class="lab-plot" aria-hidden="true"></div>
     <div class="lab-result" role="status" aria-live="polite"></div>

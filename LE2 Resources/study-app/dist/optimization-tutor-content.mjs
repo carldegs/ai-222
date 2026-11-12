@@ -74,7 +74,7 @@ export const tutorLessons = [
     {slide: 21, title: 'Keep a fraction of the last move', formulas: [0], explain: [
       math`The deck calls the remembered move $v$. Multiply the old $v$ by $\alpha$, then subtract the new gradient contribution $\epsilon g$. Add the resulting $v$ to $\theta$.`,
       math`Try $v=-2$, $\alpha=1/2$, $\epsilon=1/2$, and $g=2$. The remembered part is $-1$ and the gradient adds another $-1$, so the new $v$ is $-2$.`
-    ], lab: 'momentum', check: ['If α is zero, what remains of the update?', 'The move is −εg, the current gradient contribution.']},
+    ], check: ['If α is zero, what remains of the update?', 'The move is −εg, the current gradient contribution.']},
     {slide: 22, sources: [22, 23], title: 'Check the slope where momentum would take you', formulas: [1], explain: [
       math`[[22:Nesterov momentum]] first looks at $\theta+\alpha v$. That is where the remembered part of the move would take us. It evaluates the gradient at that lookahead position, then uses that gradient to compute the actual update.`,
       'Imagine the current slope points down to the right, but your remembered move would carry you past the bottom. The slope at the lookahead position can already point the other way.'
@@ -111,8 +111,8 @@ export const tutorLessons = [
     ], lab: 'adam', check: ['With g = 2 and both decay rates 1/2, what is the corrected direction on the first step?', 'It is 2. The raw average is 1 and the correction divides by 1/2.']},
     {slide: 30, sources: [30, 31], title: 'Compare paths on one loss surface', explain: [
       'On slide 30, the curves show how different update rules move on the same surface. Their paths can differ because of how they combine the current gradient, its history, and step size.',
-      'Use the figure to ask where a path changes direction or spends many steps. The comparison applies to the surface and settings shown.'
-    ], figure: {page: 30, box: [20, 7, 61, 83], caption: 'Follow a path from the starting area toward the star. Compare its turns with another path. The legend identifies the update rules.'}}
+      'In the demo, compare plain gradient descent, momentum, and Nesterov. It uses exact gradients and a fixed learning rate so you can see what the update rules themselves change. The narrow valley follows the idea in [[20:the momentum figure]]. Switch surfaces to explore the [[31:saddle]], or revisit [[23:the Nesterov update]] to check where it measures the slope.'
+    ], figure: {page: 30, box: [20, 7, 61, 83], caption: 'Follow a path from the starting area toward the star. Compare its turns with another path. The legend identifies the update rules.'}, lab: 'optimizer-paths'}
   ]},
   {title: 'Change the learning rate as training runs', steps: [
     {slide: 32, sources: [32, 33, 34, 35, 36, 37, 38], title: 'Set the size of future steps', explain: [
