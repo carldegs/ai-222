@@ -62,7 +62,13 @@ function goSlide(n,open=true){
  $('#announcement').textContent=`Showing original slide ${slide}`;
  drawRelatedSlides();
 }
-function toggleSlides(){slideOpen=!slideOpen;$('#study-layout').classList.toggle('no-slides',!slideOpen);$('#toggle-slides').innerHTML=`◧ <span>${slideOpen?'Hide':'Show'} slides</span>`;$('#toggle-slides').setAttribute('aria-expanded',slideOpen)}
+function toggleSlides(){
+ slideOpen=!slideOpen;
+ $('#study-layout').classList.toggle('no-slides',!slideOpen);
+ const toggle=$('#toggle-slides');
+ toggle.textContent=slideOpen?'Hide slides':'Show slides';
+ toggle.setAttribute('aria-expanded',slideOpen);
+}
 function enlarge(n=slide){$('#dialog-image').src=slideURL(n);$('#dialog-image').alt=`Original ${deck.title} slide ${n}`;$('#dialog-caption').textContent=`Slide ${n} / ${deck.slideCount} · ${deck.title} — Rowel Atienza, UP, 2025`;$('#image-dialog').showModal()}
 const lessonReferences = tutor.lessons.map(({index,title,pages}) => {
  const entry=deck.quickReference[pages[0].slide];
@@ -225,10 +231,8 @@ function readRoute(){
 }
 readRoute();
 window.addEventListener('hashchange',()=>{readRoute();goSlide(tutorSlide(),false);render()});
-document.title=`${deck.title} · AI 222 Study Companion`;
-$('.topbar strong').textContent=deck.title;
+document.title=`${deck.title} · AI 222 Exam 2`;
 $('.workspace-title h1').textContent=deck.title;
-$('.workspace-title .eyebrow').innerHTML=`DECK ${deck.number} <span> / </span> ROWEL ATIENZA · UP DILIMAN`;
 $('#topics').setAttribute('aria-label',`${deck.title} lessons`);
 const deckNav=$('#deck-navigation');
 deckNav.innerHTML=Object.values(decks).map(d=>`<a class="deck ${d.id===deck.id?'active':''}" href="${d.href}" ${d.id===deck.id?'aria-current="page"':''}><span>${d.number}</span><div>${d.title}<small>${d.slideCount} slides · ${d.tutor.lessons.length} lessons</small></div>${d.id===deck.id?'<b>⌄</b>':''}</a>${d.id===deck.id?'<div id="topic-slot"></div>':''}`).join('');
