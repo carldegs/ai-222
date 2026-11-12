@@ -1,4 +1,5 @@
 import {choice, range, labFrame, readout} from '../tutor-lab.mjs';
+import {augmentationMarkup, mountAugmentation} from './augmentation.mjs';
 
 const fits = [
   {page:17, name:'Straight line', train:'High', test:'High', note:'The line misses the bend in the data. Slide 17 calls this underfitting.'},
@@ -51,21 +52,6 @@ const labs = {
       return [`<p>${message}</p>`,table];
     }
   },
-  cutmix: {
-    title:'Change the patch and count the pixels',
-    prompt:'Start with 16 bird pixels. Paste a square patch of cat pixels and watch the target change.',
-    controls:range('lab-patch','Patch side in pixels',4,2),
-    render(control) {
-      const size = Number(control('patch'));
-      const cat = size*size, bird = 16-cat;
-      const grid = Array.from({length:16},(_,i)=> {
-        const fromCat = i%4 >= 4-size && Math.floor(i/4) < size;
-        return `<span class="lab-tile ${fromCat?'lab-tile-accent':''}">${fromCat?'Cat':'Bird'}</span>`;
-      }).join('');
-      const visual = `<div class="lab-tiles" aria-hidden="true">${grid}</div>`;
-      return [readout([['Patch size',`${size} × ${size}`],['Bird target (λ)',`${bird}/16`],['Cat target (1 − λ)',`${cat}/16`]]),visual];
-    }
-  },
   'early-stop': {
     title:'Choose the checkpoint as training progresses',
     prompt:'These example losses follow the pattern on slide 41. Advance the epoch and compare the two columns.',
@@ -115,6 +101,7 @@ const labs = {
 };
 
 export function regularizationLabMarkup(id) {
+  if (id === 'augmentation') return augmentationMarkup();
   const {title,prompt,controls} = labs[id];
   return labFrame(id,title,prompt,controls);
 }
@@ -122,6 +109,10 @@ export function regularizationLabMarkup(id) {
 export function mountRegularizationLab(root, slideURL) {
   const lab = root.querySelector('[data-tutor-lab]');
   if (!lab) return;
+  if (lab.dataset.tutorLab === 'augmentation') {
+    mountAugmentation(lab, slideURL);
+    return;
+  }
   const demo = labs[lab.dataset.tutorLab];
   const control = name => lab.querySelector('#lab-'+name).value;
   const result = lab.querySelector('.lab-result');

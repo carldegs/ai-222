@@ -83,7 +83,7 @@ export const segmentationLessons = [
     'RoIAlign fixes feature alignment. The mask head uses those aligned features to predict a shape.', [
     section(24,26,'Understand why rounding matters to a mask',[
       'Mask R-CNN starts from the Faster R-CNN idea of proposing candidate boxes. Each region of interest (RoI) is a candidate rectangle projected onto the shared feature map. [[26:The RoI comparison]] introduces RoIAlign because rounding box boundaries or sampling bins can shift the features used to draw a mask.',
-      'RoIAlign keeps fractional coordinates. It estimates the value at a point using bilinear interpolation, a weighted average of its four neighboring grid values. The weights depend on how close the sampling point is to each neighbor. The demo holds one axis fixed so you can see a single horizontal interpolation.'
+      'RoIAlign keeps fractional coordinates. It estimates the value at a point using bilinear interpolation, a weighted average of its four neighboring grid values. The weights depend on how close the sampling point is to each neighbor. In the demo, move a box across a thin feature. When a rounded corner jumps to the next grid point, the set of samples used for pooling can change abruptly. Interpolation changes the weights as the sample moves.'
     ],{formulas:['align'],lab:'align',
       check:['How does RoIAlign get a feature value between grid locations?', 'It uses interpolation from nearby feature values while keeping the fractional sample coordinate.']}),
     section(27,28,'Read the class, box, and mask paths together',[
@@ -182,7 +182,7 @@ export const segmentationLessons = [
       m`[[61:The prediction head]] runs on several pyramid levels. At every anchor it produces class, box, and coefficient outputs. As in Detection, candidate boxes need suppression before generating final masks.`,
       m`[[62:Fast NMS]] sorts each class’s candidates by confidence. In $X_{kij}$, $i$ is the candidate doing the comparison and $j$ is the box being considered. Keep only rows with $i<j$ for column $j$, so the comparison uses higher-ranked boxes. Take that column’s maximum overlap and compare it with threshold $t$.`,
       'Ordinary greedy NMS compares against selected boxes. Fast NMS can suppress a candidate using a higher-ranked box that was also suppressed. The matrix makes the operation parallel at the cost of this approximation.'
-    ],{formulas:['fastNms'],figure:figure(61,[48,24,50,61],'Follow the shared feature into the class, box, and coefficient heads.'),
+    ],{formulas:['fastNms'],lab:'fast-nms',figure:figure(61,[48,24,50,61],'Follow the shared feature into the class, box, and coefficient heads.'),
       check:['Can a box already suppressed by a stronger candidate still affect a lower-ranked box in Fast NMS?', 'Yes. The matrix uses all higher-ranked boxes, including those that are suppressed by another comparison.']}),
     section(63,64,'Read both sides of the speed–quality tradeoff',[
       '[[63:The performance slide]] reports frame rate and mask AP together. YOLACT’s shared mask assembly and parallel suppression improve speed in that comparison, while the compared two-stage systems obtain higher mask AP. The [[64:output montage]] helps show the range of shapes it handles at that setting.'

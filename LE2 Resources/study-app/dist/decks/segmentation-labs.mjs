@@ -1,4 +1,6 @@
+import {mountNmsLab, nmsLabMarkup} from './nms-walkthrough.mjs';
 import {labFrame, range, readout} from '../tutor-lab.mjs';
+import {alignLabMarkup, mountAlignLab} from './roi-align.mjs';
 
 const protoA = [0,1,1,0, 0,1,1,0, 0,1,1,0, 0,1,1,0];
 const protoB = [0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1];
@@ -6,26 +8,6 @@ const svg = (width,height,body) => `<svg viewBox="0 0 ${width} ${height}">${body
 const read = (root,id) => root.querySelector('#'+id).valueAsNumber;
 
 const labs = {
-  align:{
-    title:'Sample between two feature values',
-    prompt:'Hold the vertical position fixed on this row. Move the sample point between 0 and 4 to see how the fractional coordinate changes the interpolated feature.',
-    controls:range('seg-align','Horizontal step (four steps per cell)',4,1),
-    draw(root) {
-      const step = read(root,'seg-align');
-      const x = 46+77*step;
-      const plot = svg(400,125,`
-        <path d="M46 61H354" stroke="#a6b4a6" stroke-width="3"/>
-        <circle cx="46" cy="61" r="7" fill="#285e50"/>
-        <circle cx="354" cy="61" r="7" fill="#285e50"/>
-        <text x="46" y="93" text-anchor="middle">Grid value 0</text>
-        <text x="354" y="93" text-anchor="middle">Grid value 4</text>
-        <path d="M${x} 36V65" stroke="#89662d" stroke-width="2"/>
-        <circle cx="${x}" cy="61" r="6" fill="#89662d" stroke="white" stroke-width="2"/>
-        <text x="${x}" y="25" text-anchor="middle">Sample</text>`);
-      return [plot,readout([['Horizontal fraction',step/4],['Left weight',(4-step)/4],['Right weight',step/4],
-        ['Interpolated value',step]],'The full bilinear calculation also blends across the two rows.')];
-    }
-  },
   prototype:{
     title:'Add or cancel part of a prototype',
     prompt:'Prototype A is a vertical strip and prototype B covers the lower half. Adjust B’s coefficient. The result shows pixels whose sigmoid probability exceeds one half.',
@@ -65,12 +47,22 @@ const labs = {
 };
 
 export function segmentationLabMarkup(id) {
+  if (id === 'fast-nms') return nmsLabMarkup('segmentation');
+  if (id === 'align') return alignLabMarkup();
   const {title,prompt,controls} = labs[id];
   return labFrame(id,title,prompt,controls);
 }
 
 export function mountSegmentationLabs(container) {
   for (const root of container.querySelectorAll('[data-tutor-lab]')) {
+    if (root.dataset.tutorLab === 'fast-nms') {
+      mountNmsLab(root);
+      continue;
+    }
+    if (root.dataset.tutorLab === 'align') {
+      mountAlignLab(root);
+      continue;
+    }
     const lab = labs[root.dataset.tutorLab];
     const update = () => {
       const [plot,result] = lab.draw(root);

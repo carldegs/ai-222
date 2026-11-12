@@ -128,3 +128,24 @@ button.tutor-practice-link{color:var(--green);background:none;border:0;padding:0
   padding: 6px 8px;
   text-align: left;
 }
+
+.nms-playback{display:flex;flex-wrap:wrap;gap:6px}
+.nms-source{width:100%}
+.nms-source button{margin-right:7px}
+.nms-status{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}
+.nms-status span{border:1px solid #d6e0d2;border-radius:4px;background:#fffefb;padding:5px 8px;font-size:12px}
+.nms-status .nms-active,.nms-column{background:#d9e8d7;border-color:#91aa8d}
+.nms-matrix{margin:10px 0}
+.nms-matrix caption{text-align:left;font-weight:650;color:#42584c}
+.nms-matrix th,.nms-matrix td{padding:5px 8px}
+
+.optimizer-results { width: 100%; margin: 8px 0; font-size: 12px; }
+.optimizer-results :is(td, th) { padding: 4px 8px; text-align: left; font-variant-numeric: tabular-nums; }
+.optimizer-results thead { background: #e0e9dd; }
+.optimizer-legend {
+  display: inline-block;
+  width: 20px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border-top: 3px var(--method-line) var(--method-color);
+}

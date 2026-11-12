@@ -77,8 +77,8 @@ export const regularizationTutorLessons = [
     ], figure:{page:28,box:[39, 14, 33, 73],caption:'Both source images contribute at the same pixel locations. The target is blended by the same proportions.'}},
     {slide:29, title:'CutMix pastes a patch and counts its area', formulas:[1], explain:[
       math`The mask $M$ picks the source at each pixel. A 1 keeps the bird pixel from $x_1$. A 0 brings in the cat pixel from $x_2$. Count how many pixels each source supplies before mixing the target.`,
-      'In a 4 by 4 image, replacing a 2 by 2 patch gives the cat 4 of the 16 pixels. The target is three quarters bird and one quarter cat. Try changing the patch in the demo.'
-    ], figure:{page:29,box:[48, 16, 31, 72],caption:'The cat appears inside the patch. Outside the patch the bird image supplies the pixels.'}, lab:'cutmix',
+      'In a 4 by 4 image, replacing a 2 by 2 patch gives the cat 4 of the 16 pixels. The target is three quarters bird and one quarter cat. Compare the three methods in the demo. Try dragging part of the CutMix patch past the edge.'
+    ], figure:{page:29,box:[48, 16, 31, 72],caption:'The cat appears inside the patch. Outside the patch the bird image supplies the pixels.'}, lab:'augmentation',
       check:['A 2 by 2 cat patch overlaps the edge of the 4 by 4 bird image. Only two cat pixels get pasted. What fraction of the target is cat?', 'The cat supplies 2 of the 16 pixels in the final image, so its fraction of the target is 2/16, or 1/8.']}
   ]},
   {title:'Choose variations and encourage agreement', steps:[
