@@ -18,15 +18,17 @@ function illustration({page, box: [x, y, w, h], caption}, slideURL) {
 }
 
 function discussion(step, tutor, slideURL, showFormula, equationAnchor, practiceAndNotes) {
+  const lab = step.lab ? tutor.labMarkup(step.lab) : '';
   return `<section class="tutor-discussion">
     <h3>${prose(step.title)}</h3>
     ${step.explain.map(p=>`<p class="body-copy">${explained(p)}</p>`).join('')}
     ${step.figure?illustration(step.figure,slideURL):''}
+    ${step.labBeforeFormulas ? lab : ''}
     ${step.formulas?.length?`<div class="tutor-equations"${equationAnchor?' id="tutor-equations"':''}>
       <h4 class="section-label">Read the equation${step.formulas.length>1?'s':''}</h4>
       ${step.formulas.map(index=>showFormula(step.topic,index)).join('')}
     </div>`:''}
-    ${step.lab?tutor.labMarkup(step.lab):''}
+    ${step.labBeforeFormulas ? '' : lab}
     ${step.flow?tutor.flow:''}
     ${step.check?`<details class="tutor-check"><summary><span class="eyebrow">CHECK YOUR UNDERSTANDING</span>${prose(step.check[0])}</summary><p>${prose(step.check[1])}</p></details>`:''}
     ${step.bridge?`<p class="tutor-bridge"><b>Where this fits</b> ${prose(step.bridge)}</p>`:''}

@@ -132,8 +132,33 @@ export const segmentationExam = {
             m`\begin{aligned}\mathrm{IoU}_{\mathrm{bg}}&=8/(8+2+0)=4/5\\
               \mathrm{IoU}_{\mathrm{can}}&=2/(2+0+2)=1/2\\
               \mathrm{mIoU}&=(4/5+1/2)/2=13/20\end{aligned}`)),
+        item(22,4,'A second FCN finds all 4 can pixels but mislabels 2 background pixels as can. Compute its accuracy and mIoU. Which measure distinguishes the predictions?',
+          'Award 1 mark for the accuracy tie, 1 for each class IoU, and 1 for concluding that the second FCN has higher mIoU.',
+          step(m`\mathrm{Acc}=\frac{\#\text{ correct}}{\#\text{ evaluated}},\quad
+            \mathrm{IoU}_c=\frac{\mathrm{TP}_c}{\mathrm{TP}_c+\mathrm{FP}_c+\mathrm{FN}_c},\quad
+            \mathrm{mIoU}=\frac1K\sum_c\mathrm{IoU}_c`,
+            m`\begin{aligned}\mathrm{Acc}&=(6+4)/12=5/6\\
+              \mathrm{IoU}_{\mathrm{bg}}&=6/(6+0+2)=3/4\\
+              \mathrm{IoU}_{\mathrm{can}}&=4/(4+2+0)=2/3\\
+              \mathrm{mIoU}&=(3/4+2/3)/2=17/24>13/20\end{aligned}`)),
         item(16,2,'How can a regional pooling branch give a pixel more spatial context than a global pooling branch?',
           'Regional pooling keeps a separate summary for each subregion (1 mark). Upsampling provides the local classifier with the context of its location within the scene (1 mark).')
+      ]
+    },
+    {
+      title:'Recover spatial detail and add scene context',
+      setup:'Use a simplified 512-by-512 input with intermediate FCN score grids spaced exactly 32 or 8 input pixels apart. Separately, a PSPNet branch receives a 60-by-60 feature map.',
+      parts:[
+        item(10,3,'Give the two intermediate grid sizes and the final label-map size. What supplies the finer information?',
+          'Award 1 mark for the intermediate grid sizes, 1 for the final map size, and 1 for noting that skip connections bring finer scores from earlier layers.',
+          step(m`H_{\rm grid}=H/s,\quad W_{\rm grid}=W/s`,
+            m`512/32=16,\quad512/8=64,\qquad\text{final label map: }512\times512`)),
+        item(16,3,'How many pooled bins are there per channel across the four PSPNet grids? How many feature positions does each bin in the 6-by-6 grid summarize?',
+          'Award 1 mark for summing the squared grid sizes, 1 for the total, and 1 for the bin area.',
+          step(m`N_{\rm bins}=\sum_{b\in\{1,2,3,6\}}b^2,\quad A_{\rm bin}=(60/b)^2`,
+            m`N_{\rm bins}=1+4+9+36=50,\quad A_{\rm bin}=(60/6)^2=100`)),
+        item(16,2,'What changes if the global pooling branch is removed but the other branches stay?',
+          'The explicit whole-map average disappears (1 mark). The remaining pooled branches still supply regional context (1 mark).')
       ]
     },
     {

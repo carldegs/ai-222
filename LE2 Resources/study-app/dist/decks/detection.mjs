@@ -75,6 +75,8 @@ const resources = [
 
 export const detection = {
   id:'detection', number:'03', title:'Detection', sourceTitle:'Object Detection', href:'detection.html', slideCount:132,
+  optionalFromSlide:51,
+  optionalScopeNote:'SSD and YOLO were reported in scope. The guide includes their evaluation slides through slide 50.',
   assetPrefix:'assets/detection/slide-', pdf:'assets/detection/deck.pdf', storageKey:'ai222-detection-v1',
   lessons, tutor, examples, questions, resources, quickReference, exam:detectionExam,
   notationTitle:'New to the notation? Start with coordinates, IoU, and offsets',

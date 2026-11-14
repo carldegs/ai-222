@@ -1,6 +1,6 @@
 const math = String.raw;
 const item = (slide, marks, prompt, answer, ...steps) => ({slide, marks, prompt, answer, steps});
-const step = (formula, substitution) => ({formula, substitution});
+const step = (formula, substitution, explanation) => ({formula, substitution, explanation});
 
 export const practiceExams = {
   regularization: {
@@ -32,13 +32,15 @@ export const practiceExams = {
           item(9, 2, 'Find each joint likelihood.',
             'Independence lets you multiply the two probabilities for each setting. Award 1 mark per likelihood.',
             step(math`p(y_1,y_2\mid X,\theta)=p(y_1\mid x_1,\theta)\,p(y_2\mid x_2,\theta)`,
-              math`\begin{aligned}p(y_1,y_2\mid X,\theta_A)&=\tfrac12\cdot\tfrac12=\tfrac14\\p(y_1,y_2\mid X,\theta_B)&=\tfrac34\cdot\tfrac14=\tfrac3{16}\end{aligned}`)),
+              math`\begin{aligned}p(y_1,y_2\mid X,\theta_A)&=\tfrac12\cdot\tfrac12=\tfrac14\\p(y_1,y_2\mid X,\theta_B)&=\tfrac34\cdot\tfrac14=\tfrac3{16}\end{aligned}`,
+              math`The two inputs are $X=(x_1,x_2)$, and their observed outcomes are $y_1$ and $y_2$. The weights for A and B are written $\theta_A$ and $\theta_B$. In each given pair, the first number is $p(y_1\mid x_1,\theta)$ and the second is $p(y_2\mid x_2,\theta)$. So A uses $1/2$ and $1/2$, while B uses $3/4$ and $1/4$. The prior scores enter in part (c).`)),
           item(10, 2, 'Which setting does maximum likelihood estimation (MLE) choose? Explain which has the smaller negative log-likelihood without evaluating any logs.',
             'MLE chooses A because its likelihood is higher (1 mark). Log is increasing and the negative sign reverses the ordering, so A has the smaller negative log-likelihood (1 mark).'),
           item(13, 3, 'Compute the unnormalized posterior score for each setting. Which does maximum a posteriori estimation (MAP) choose?',
             'B has the higher posterior score. Award 1 mark per score and 1 for the choice.',
             step(math`\operatorname{score}(\theta)=p(\mathcal D\mid\theta)\,p(\theta)`,
-              math`\begin{aligned}\operatorname{score}(\theta_A)&=\tfrac14\cdot\tfrac14=\tfrac1{16}=\tfrac2{32}\\\operatorname{score}(\theta_B)&=\tfrac3{16}\cdot\tfrac12=\tfrac3{32}\end{aligned}`))
+              math`\begin{aligned}\operatorname{score}(\theta_A)&=\tfrac14\cdot\tfrac14=\tfrac1{16}=\tfrac2{32}\\\operatorname{score}(\theta_B)&=\tfrac3{16}\cdot\tfrac12=\tfrac3{32}\end{aligned}`,
+              math`The first factor comes from part (a), and the second is the prior score given in the question. A’s likelihood and prior score both happen to be $1/4$.`))
         ]
       },
       {
@@ -49,6 +51,10 @@ export const practiceExams = {
             'Award 1 mark for the blended pixel and 1 for the blended target in bird/cat order.',
             step(math`\begin{aligned}\tilde{x}&=\lambda x_1+(1-\lambda)x_2\\\tilde{y}&=\lambda y_1+(1-\lambda)y_2\end{aligned}`,
               math`\begin{aligned}\tilde{x}&=\tfrac23(3)+\tfrac13(0)=2\\\tilde{y}&=\tfrac23(1,0)+\tfrac13(0,1)=(\tfrac23,\tfrac13)\end{aligned}`)),
+          item(28, 3, math`On the MixUp image, the model assigns probability $1/4$ to bird and $3/4$ to cat. Compute the cross-entropy with the blended target from part (a). Leave the logs exact.`,
+            'Award 1 mark for each weighted log term and 1 for adding them. The weights come from the target; the values inside the logs come from the prediction.',
+            step(math`\mathrm{CE}(\tilde y,p)=-\sum_c\tilde y_c\ln p_c`,
+              math`\begin{aligned}\mathrm{CE}(\tilde y,p)&=-\tfrac23\ln(\tfrac14)-\tfrac13\ln(\tfrac34)\\&=\tfrac43\ln 2+\tfrac13\ln(\tfrac43)\end{aligned}`)),
           item(29, 2, 'For CutMix, paste a 2-by-3 cat patch fully inside the bird image. Find the pasted fraction and the target.',
             'Award 1 mark for the pasted fraction and 1 for the area-weighted target.',
             step(math`\begin{aligned}1-\lambda&=\frac{\text{pasted area}}{\text{total area}}\\\tilde{y}&=\lambda y_1+(1-\lambda)y_2\end{aligned}`,
@@ -124,9 +130,31 @@ export const practiceExams = {
           item(17, 2, math`In a separate full-batch example, $L(\theta)=\theta^2/2$. Start at $\theta=2$ and use $\epsilon=3$. Compute the new weight and compare the losses.`,
             'Award 1 mark for the next weight. The loss rises, illustrating overshoot (1 mark for the comparison).',
             step(math`\begin{aligned}g(\theta)&=\frac{d}{d\theta}(\theta^2/2)=\theta\\\theta_{\rm next}&=\theta-\epsilon g(\theta)\end{aligned}`,
-              math`\theta_{\rm next}=2-3(2)=-4`),
+              math`\begin{aligned}g(2)&=2\\\theta_{\rm next}&=2-3(2)=-4\end{aligned}`,
+              math`The question gives the loss $L(\theta)$. The update needs its slope $g(\theta)$, so differentiate with respect to the weight $\theta$. The power rule gives $\tfrac12(2\theta)=\theta$. Evaluate that slope at the starting weight, then use the original loss to compare the two weights.`),
             step(math`L(\theta)=\theta^2/2`,
               math`\begin{aligned}L(2)&=2^2/2=2\\L(-4)&=(-4)^2/2=8\end{aligned}`))
+        ]
+      },
+      {
+        title: 'Separate minibatch noise from bias',
+        setup: math`At a fixed weight, a small training set has four examples with scalar gradients $0,0,4,4$. Each draw picks one of the four examples with equal probability. For a two-draw minibatch, put the first example back before drawing again, so the draws are independent and the same example can appear twice. Treat variance as the mean squared distance from the expected gradient.`,
+        parts: [
+          item(5, 3, 'Find the full-data gradient and the expected gradient and variance of a one-draw batch.',
+            'Award 1 mark each for the full-data mean, the same expected value for a uniform draw, and the variance.',
+            step(math`g_{\rm full}=\frac1N\sum_{i=1}^N g_i,\quad \mathbb E[g_1]=\tfrac12(0)+\tfrac12(4)`,
+              math`g_{\rm full}=\frac{0+0+4+4}{4}=2,\qquad \mathbb E[g_1]=2`,
+              'Two of the four examples have each gradient value, so a uniform draw gives either value with probability 1/2.'),
+            step(math`\operatorname{Var}(g_1)=\mathbb E[(g_1-\mathbb E[g_1])^2]`,
+              math`\operatorname{Var}(g_1)=\big[(0-2)^2+(4-2)^2\big]/2=4`)),
+          item(5, 3, 'List the four equally likely ordered pairs of gradient values for two draws. Compute the average for each pair, then find the mean and variance of those averages.',
+            'Award 1 mark each for the four averages including the repeated value, the mean, and the variance.',
+            step(math`g=\frac{g_1+g_2}{2}`,
+              math`\tfrac{0+0}{2}=0,\quad \tfrac{0+4}{2}=2,\quad \tfrac{4+0}{2}=2,\quad \tfrac{4+4}{2}=4`),
+            step(math`\operatorname{Var}(g)=\mathbb E[(g-\mathbb E[g])^2]`,
+              math`\begin{aligned}\mathbb E[g]&=(0+2+2+4)/4=2\\\operatorname{Var}(g)&=(4+0+0+4)/4=2\end{aligned}`)),
+          item(5, 2, 'Which result shows that the estimates are unbiased? Which result shows the larger batch is less noisy?',
+            'Both batch sizes have an expected gradient equal to the full-data gradient (1 mark). The larger batch has lower variance (1 mark).')
         ]
       },
       {

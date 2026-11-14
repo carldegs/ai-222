@@ -20,3 +20,15 @@ export function readLessonProgress(raw, lessons, topicCount) {
  }
  return {version:2,completed,ratings:legacy.ratings};
 }
+
+export function scopePractice({exam, questions, lessons}, optionalFromSlide) {
+  if (optionalFromSlide === undefined) return {exam, questions};
+  const included = ({slide}) => slide < optionalFromSlide;
+  return {
+    exam: {
+      problems: exam.problems.filter(problem => problem.parts.every(included)),
+      theory: exam.theory.filter(included)
+    },
+    questions: questions.filter(question => lessons[question.topic].slides.every(slide => slide < optionalFromSlide))
+  };
+}

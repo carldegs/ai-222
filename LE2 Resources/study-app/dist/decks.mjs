@@ -1,4 +1,7 @@
-import {quickReference as optimizationReference} from './optimization-reference.mjs';
+import * as segmentationReference from './decks/segmentation-reference.mjs';
+import * as detectionReference from './decks/detection-reference.mjs';
+import * as regularizationReference from './decks/regularization-reference.mjs';
+import {quickReference as optimizationReference, referenceEquationContext, referenceOverview} from './optimization-reference.mjs';
 import {practiceExams} from './practice-exams.mjs';
 import {buildWalkthrough,buildLessons} from './walkthrough.mjs';
 import {optimizationTutor} from './optimization-tutor.mjs';
@@ -14,10 +17,10 @@ import * as regularizationSupport from './decks/regularization-support.mjs';
 import {detection} from './decks/detection.mjs';
 import {segmentation} from './decks/segmentation.mjs';
 export const decks={
- optimization:{id:'optimization',exam:practiceExams.optimization,tutor:optimizationTutor,number:'01',title:'Optimization',href:'./',...optimizationContent,examples:optimizationExamples,equationContext:optimizationEquations,notationBasics:optimizationNotation,minibatchAdvantages,challengeConnections,trainingScenario,references:conceptReferences,quickReference:optimizationReference,slideCount:44,assetPrefix:'assets/slide-',pdf:'assets/optimizer.pdf',storageKey:'ai222-optimization-v1'},
- regularization:{id:'regularization',exam:practiceExams.regularization,tutor:regularizationTutor,number:'02',title:'Regularization',href:'regularization.html',...regularizationContent,...regularizationPractice,resources:regularizationSupport.resources,notationBasics:regularizationSupport.notationBasics,challengeConnections:regularizationSupport.connections,trainingScenario:regularizationSupport.scenario,references:regularizationSupport.references,quickReference:regularizationSupport.quickReference,minibatchAdvantages:[],slideCount:46,assetPrefix:'assets/regularization/slide-',pdf:'assets/regularization/deck.pdf',storageKey:'ai222-regularization-v1'},
- detection,
- segmentation
+ optimization:{id:'optimization',exam:practiceExams.optimization,tutor:optimizationTutor,number:'01',title:'Optimization',href:'./',...optimizationContent,examples:optimizationExamples,equationContext:optimizationEquations,notationBasics:optimizationNotation,minibatchAdvantages,challengeConnections,trainingScenario,references:conceptReferences,quickReference:optimizationReference,referenceEquationContext,referenceOverview,slideCount:44,assetPrefix:'assets/slide-',pdf:'assets/optimizer.pdf',storageKey:'ai222-optimization-v1'},
+ regularization:{id:'regularization',...regularizationReference,exam:practiceExams.regularization,tutor:regularizationTutor,number:'02',title:'Regularization',href:'regularization.html',...regularizationContent,...regularizationPractice,resources:regularizationSupport.resources,notationBasics:regularizationSupport.notationBasics,challengeConnections:regularizationSupport.connections,trainingScenario:regularizationSupport.scenario,references:regularizationSupport.references,quickReference:regularizationSupport.quickReference,minibatchAdvantages:[],slideCount:46,assetPrefix:'assets/regularization/slide-',pdf:'assets/regularization/deck.pdf',storageKey:'ai222-regularization-v1'},
+ detection:{...detection,...detectionReference},
+ segmentation:{...segmentation,...segmentationReference}
 };
 for (const deck of Object.values(decks)) {
  deck.tutor.pages=buildWalkthrough(deck);

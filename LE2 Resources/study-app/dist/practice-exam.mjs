@@ -12,31 +12,32 @@ function scratch(id, label) {
   </details>`;
 }
 
-function solution({answer, slide, steps}) {
+function solution({answer, steps}, sources) {
   return `<details class="exam-solution">
     <summary>Solution and marks</summary>
-    ${steps.map(({formula, substitution}) => `<div class="exam-work">
+    ${steps.map(({formula, substitution, explanation}) => `<div class="exam-work">
+      ${explanation ? `<p>${prose(explanation)}</p>` : ''}
       <span>Formula</span>${renderDisplayMath(formula)}
       <span>Substitute and simplify</span>${renderDisplayMath(substitution)}
     </div>`).join('')}
     <p>${prose(answer)}</p>
-    ${source(slide)}
+    ${sources}
   </details>`;
 }
 
-function questions(items, lettered = false) {
+function questions(items, sourceLinks, lettered = false) {
   return `<ol class="exam-items"${lettered ? ' type="a"' : ''}>${items.map(item =>
-    `<li>${prose(item.prompt)} <span class="exam-marks">(${markLabel(item.marks)})</span>${solution(item)}</li>`).join('')}</ol>`;
+    `<li>${prose(item.prompt)} <span class="exam-marks">(${markLabel(item.marks)})</span>${item.hint ? `<details class="problem-hint"><summary>Need a hint?</summary><p>${prose(item.hint)}</p></details>` : ''}${solution(item, sourceLinks(item))}</li>`).join('')}</ol>`;
 }
 
-export function renderExam({problems, theory}) {
+export function renderExam({problems, theory}, {title = 'Practice exam', suggestedMinutes, sourceLinks = item => source(item.slide)} = {}) {
   const problemMarks = marksFor(problems.flatMap(problem => problem.parts));
   const theoryMarks = marksFor(theory);
   const total = problemMarks + theoryMarks;
   return `<article class="practice-exam" aria-labelledby="exam-title">
     <div class="exam-heading">
-      <h3 id="exam-title">Practice exam</h3>
-      <span>${markLabel(total)} · No calculator</span>
+      <h3 id="exam-title">${title}</h3>
+      <span>${markLabel(total)} · No calculator${suggestedMinutes ? ` · ${suggestedMinutes} min suggested` : ''}</span>
     </div>
     <p class="reference-intro">Work on paper or type below. Open the solution under each question when you’re ready to check your work. Typed answers stay in this tab until you reload.</p>
     <nav class="exam-jumps" aria-label="Practice exam sections">
@@ -48,13 +49,13 @@ export function renderExam({problems, theory}) {
       ${problems.map(({title, setup, parts}, index) => `<article class="exam-problem">
         <h5>${index + 1}. ${prose(title)}</h5>
         <p>${prose(setup)}</p>
-        ${questions(parts, true)}
+        ${questions(parts, sourceLinks, true)}
         ${scratch(`problem-${index + 1}`, `Type answers for problem ${index + 1}`)}
       </article>`).join('')}
     </section>
     <section id="exam-theory" aria-labelledby="exam-theory-title">
       <h4 id="exam-theory-title" class="section-label">Part II · Short-answer theory <span>${markLabel(theoryMarks)}</span></h4>
-      <div class="exam-problem">${questions(theory)}${scratch('theory', 'Type answers for short-answer theory')}</div>
+      <div class="exam-problem">${questions(theory, sourceLinks)}${scratch('theory', 'Type answers for short-answer theory')}</div>
     </section>
   </article>`;
 }

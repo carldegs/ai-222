@@ -1,3 +1,4 @@
+import {fcnLab, pspLab} from './semantic-labs.mjs';
 import {mountNmsLab, nmsLabMarkup} from './nms-walkthrough.mjs';
 import {labFrame, range, readout} from '../tutor-lab.mjs';
 import {alignLabMarkup, mountAlignLab} from './roi-align.mjs';
@@ -8,6 +9,8 @@ const svg = (width,height,body) => `<svg viewBox="0 0 ${width} ${height}">${body
 const read = (root,id) => root.querySelector('#'+id).valueAsNumber;
 
 const labs = {
+  fcn:fcnLab,
+  psp:pspLab,
   prototype:{
     title:'Add or cancel part of a prototype',
     prompt:'Prototype A is a vertical strip and prototype B covers the lower half. Adjust B’s coefficient. The result shows pixels whose sigmoid probability exceeds one half.',

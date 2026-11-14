@@ -25,31 +25,37 @@ const labs = {
     }
   },
   penalty: {
-    title:'Compare what L1 and L2 charge',
-    prompt:'A fits the training data better but has a bigger weight. At λ = 1/4, switch the penalty rule and see which model has the smaller total.',
+    title:'Find where data fit and the penalty balance',
+    prompt:'The data loss is (θ − 2)² / 2. Change the penalty and its strength. The marked point is the minimum of the combined objective.',
     controls:choice('lab-penalty','Penalty rule',[['l2','L2 · square the weight'],['l1','L1 · take the absolute value']],'l2')
-      + choice('lab-strength','Penalty strength (λ)',[[0,'0'],[.125,'1/8'],[.25,'1/4'],[.5,'1/2'],[1,'1']],.25),
+      + choice('lab-strength','Penalty strength (λ)',[0,1,2].map(value=>[value,String(value)]),1),
     render(control) {
-      const strength = Number(control('strength'));
-      const candidates = [
-        {name:'A', loss:1, weight:-3},
-        {name:'B', loss:2, weight:1}
-      ].map(({name, loss, weight})=>{
-        const amount = control('penalty')==='l1'?Math.abs(weight):weight**2;
-        const penalty = strength*amount;
-        return {name, loss, weight, penalty, total:loss+penalty};
-      });
-      const [a,b] = candidates;
-      const rows = candidates.map(({name, loss, weight, penalty, total})=>`<tr>
-        <th scope="row">${name}</th><td>${weight}</td><td>${loss}</td><td>${penalty}</td><td><strong>${total}</strong></td>
-      </tr>`).join('');
-      const table = `<table class="lab-penalty-table">
-        <caption>Training objective for each candidate</caption>
-        <thead><tr><th scope="col">Model</th><th scope="col">Weight</th><th scope="col">Data loss</th><th scope="col">Penalty</th><th scope="col">Total</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>`;
-      const message = a.total===b.total?'Both models have the same total.':`Model ${a.total<b.total?'A':'B'} has the lower training objective.`;
-      return [`<p>${message}</p>`,table];
+      const strength=Number(control('strength'));
+      const l1=control('penalty')==='l1';
+      const fit=weight=>(weight-2)**2/2;
+      const penalty=weight=>strength*(l1?Math.abs(weight):weight**2);
+      const total=weight=>fit(weight)+penalty(weight);
+      const best=l1?Math.max(0,2-strength):2/(1+2*strength);
+      const bestLabel=l1||strength===0?String(best):`2/${1+2*strength}`;
+      const x=weight=>116+74*weight;
+      const y=loss=>170-10*loss;
+      const curve=(fn,color,dash='')=>`<polyline points="${Array.from({length:61},(_,i)=>{
+        const weight=-1+i/15;
+        return `${x(weight)},${y(fn(weight))}`;
+      }).join(' ')}" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="${dash}"/>`;
+      const plot=`<svg viewBox="0 0 390 209">
+        <defs><clipPath id="penalty-chart-clip"><rect x="42" y="21" width="296" height="149"/></clipPath></defs>
+        <path d="M42 21V170H338 M116 21V170" fill="none" stroke="#a4b0a6"/>
+        <text x="7" y="21">Cost</text><text x="344" y="175">θ</text>
+        ${[-1,0,1,2,3].map(value=>`<text x="${x(value)}" y="188" text-anchor="middle">${value}</text>`).join('')}
+        <g clip-path="url(#penalty-chart-clip)">${curve(fit,'#48769c','5 3')}${curve(penalty,'#986137','2 4')}${curve(total,'#285e50')}</g>
+        <circle cx="${x(best)}" cy="${y(total(best))}" r="5" fill="#285e50" stroke="white" stroke-width="2"/>
+        <text x="42" y="205" style="fill:#48769c">– – Data loss</text>
+        <text x="147" y="205" style="fill:#986137">··· Penalty</text>
+        <text x="254" y="205" style="fill:#285e50">— Total · minimum</text>
+      </svg>`;
+      return [readout([['Best weight',bestLabel],['Penalty',l1?'λ|θ|':'λθ²']],
+        best===0?'The L1 penalty pulls the minimum all the way to zero in this example.':'The marker shows the weight with the lowest combined cost.'),plot];
     }
   },
   'early-stop': {

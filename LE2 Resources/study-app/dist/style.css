@@ -84,3 +84,63 @@ a.deck{text-decoration:none;color:inherit}a.deck:not(.active){border:1px solid t
 .exam-work > span { font-size: 12px; font-weight: 650; color: #52685d; }
 .exam-work .math { padding: 0 0 2px; min-height: 0; }
 .exam-work .katex-display { margin: 4px 0 10px; text-align: left; }
+
+.topic-scope {
+  border-top: 1px solid #d5dccf;
+  margin: 12px 5px 4px;
+  padding: 10px 10px 0;
+  color: #526157;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.topic-scope p { margin: 4px 0 6px; }
+.topic-optional {
+  display: block;
+  width: fit-content;
+  margin-top: 4px;
+  border-radius: 4px;
+  padding: 1px 5px;
+  background: #ebe6d8;
+  color: #645534;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.practice-scope-note{margin:.4rem 0 1rem;color:var(--muted);font-size:.8rem;line-height:1.5}
+
+.course-mock{display:block;width:100%;margin:0 0 20px;padding:9px 10px;text-align:left;border:1px solid #d6dfd2;border-radius:7px;background:transparent;color:var(--green);font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.course-mock:hover,.course-mock.selected{background:#e0e8da}
+.view-mock .tabs,.view-mock #toggle-slides,.view-mock #slides,.view-mock #divider,.view-mock #topics,.view-mock .sidebar-bottom,.view-mock .deck b{display:none}
+.view-mock .study-layout{grid-template-columns:minmax(0,800px)!important;justify-content:center}
+.view-mock main{padding-right:0}
+
+.reference-overview { margin: 0 0 24px; }
+.reference-overview h3 { font: 400 23px/1.25 Georgia, serif; margin: 0 0 8px; }
+.reference-table-wrap { border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.reference-table { min-width: 500px; }
+.reference-table th, .reference-table td { padding: 9px; vertical-align: top; }
+.reference-table thead th:last-child { width: 37%; }
+.reference-table thead th { background: var(--wash); color: var(--green); }
+.reference-table tbody th { background: transparent; color: var(--green); }
+.reference-table tbody th .slide-ref { margin-top: 4px; white-space: nowrap; }
+.reference-table tr:last-child > * { border-bottom: 0; }
+.reference-table .math { font-size: 12px; min-height: 0; padding: 0; }
+.reference-table .katex-display { text-align: left; margin: .15em 0 .35em; }
+.reference-table .katex-display > .katex { text-align: left; }
+.reference-notation { font-size: 11px; line-height: 1.7; color: var(--muted); }
+
+.reference-mechanism { margin: 0; }
+
+.cosine-circle{margin:14px 0 0}
+.cosine-circle svg{display:block;width:100%;max-width:520px;margin:auto;font-size:15px;text-anchor:middle;fill:var(--ink)}
+.cosine-outline{fill:none;stroke:#bdcbb9;stroke-dasharray:4 4}
+.cosine-arc,.cosine-axis,.cosine-spoke,.cosine-projection{fill:none}
+.cosine-arc{stroke:#658675;stroke-width:2}
+.cosine-axis,.cosine-spoke{stroke:#9aaf9d}
+.cosine-angle{font-weight:700}
+.cosine-value,.cosine-axis-label{fill:var(--green)}
+.cosine-axis-label{font-size:13px}
+.cosine-highlight{fill:#87551e}
+.cosine-highlight .cosine-spoke,.cosine-projection{stroke:#87551e;stroke-width:1.6}
+.cosine-projection{stroke-dasharray:4 3}
+.cosine-circle figcaption{font-size:12px;line-height:1.6;color:var(--muted)}

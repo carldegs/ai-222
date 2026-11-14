@@ -24,22 +24,35 @@ export const examples = [
     'The denominator includes the areas covered by either rectangle.',
     'If the same boxes overlap in a 3-by-4 strip, what is IoU?',
     [work('Compute the two areas.',m`|A\cap B|=12,\qquad |A\cup B|=16+16-12=20`),work('Divide.',m`\operatorname{IoU}=12/20=3/5`)]),
-  worked(30,29,'Normalize the box relative to its anchor',
-    m`An anchor has center $(4,4)$ and size $(8,8)$. The object has center $(6,4)$ and size $(8,4)$. Give the encoding before extra scaling.`,
-    'Separate center shifts from size ratios.',
-    [work('Compute the shifts in anchor units.',m`(\Delta_x,\Delta_y)=((6-4)/8,(4-4)/8)=(1/4,0)`),
-     work('Take logs of the size ratios.',m`(\Delta_w,\Delta_h)=(\log(8/8),\log(4/8))=(0,-\log2)`)],
-    'The width stayed the same, so its encoded change is zero. The negative height term means shrink.',
-    'The encoded height is the log of the height ratio.',
+  worked(29,29,'Write the four instructions for the boxes in the diagram',
+    m`The anchor has center $(6,5)$, width $8$, and height $6$. The labeled object box has center $(10,7)$, width $4$, and height $8$. Find the four instructions before extra scaling.`,
+    'For movement, subtract the centers and divide by the anchor dimension. For size, divide the dimensions first and then take the log.',
+    [work('Write the rule for the two center shifts.',m`\left(\frac{c_{bx}-c_{ax}}{w_a},\frac{c_{by}-c_{ay}}{h_a}\right)`),
+     work('Substitute the centers and anchor dimensions.',m`\left(\frac{10-6}{8},\frac{7-5}{6}\right)=\left(\frac12,\frac13\right)`),
+     work('Write the rule for the two size changes.',m`\left(\log\frac{w_b}{w_a},\log\frac{h_b}{h_a}\right)`),
+     work('Substitute the widths and heights.',m`\left(\log\frac48,\log\frac86\right)=\left(\log\frac12,\log\frac43\right)`),
+     work('Put the results in slide order.',m`y_{\mathrm{gt}}=\left(\frac12,\frac13,\log\frac12,\log\frac43\right)`)],
+    'Move right half an anchor width and down one third of an anchor height. Halve the width and make the height four thirds as large.',
+    'Both center-shift denominators use the anchor dimensions.',
     m`What would the unscaled encoding be if the target had the anchor’s center and size?`,
     [work('The center shifts are zero and both size ratios are one.',m`y_{\mathrm{gt}}=(0,0,\log1,\log1)=(0,0,0,0)`)]),
-  worked(31,31,'Choose the Smooth L1 branch',
-    m`Use $\sigma=1$. The two offset errors are $-1/2$ and $2$. Compute their individual losses.`,
-    'Compare the absolute errors with the threshold 1.',
-    [work('The small error uses the square.',m`L1_{\mathrm{smooth}}(-1/2)=(-1/2)^2/2=1/8`),
-     work('The large error uses the linear tail.',m`L1_{\mathrm{smooth}}(2)=2-1/2=3/2`)],
-    'The branch is chosen by error magnitude, and both losses are nonnegative.',
-    'A negative error with a large magnitude is still in the linear branch.',
+  worked(31,31,'Score two guesses for the can’s horizontal shift',
+    m`The correct horizontal instruction from the diagram is $1/2$ before extra scaling. Compare an SSD prediction of $0$ with a prediction of $-3/2$. Find the Smooth L1 penalty for each guess using $\sigma=1$.`,
+    'Subtract the correct instruction from each guess. Compare the magnitude of each error with 1.',
+    [work('Compute prediction minus target for each guess.',m`\begin{gathered}
+      u=y_{\mathrm{pred},x}-y_{\mathrm{gt},x}\\
+      0-\frac12=-\frac12,\qquad -\frac32-\frac12=-2
+    \end{gathered}`),
+     work('For magnitude below 1, use the square.',m`\begin{aligned}
+       L1_{\mathrm{smooth}}(u)&=\frac{u^2}{2}\\
+       L1_{\mathrm{smooth}}(-1/2)&=\frac{(-1/2)^2}{2}=\frac18
+     \end{aligned}`),
+     work('For magnitude at least 1, use the linear branch.',m`\begin{aligned}
+       L1_{\mathrm{smooth}}(u)&=|u|-\frac12\\
+       L1_{\mathrm{smooth}}(-2)&=2-\frac12=\frac32
+     \end{aligned}`)],
+    'Leaving the center alone costs less than moving it left when the correct move is to the right.',
+    'Use the magnitude to pick the branch. The error of −2 has magnitude 2.',
     m`At the join $u=1$ and $\sigma=1$, evaluate both expressions.`,
     [work('The quadratic gives the same value as the linear tail.',m`1^2/2=1/2=1-1/2`)]),
   worked(41,40,'Trace one NMS pass on three predictions',
@@ -178,6 +191,20 @@ export const detectionExam = {
       ]
     },
     {
+      title:'Score a positive and a background anchor',
+      setup:m`SSD samples two anchors. A is matched to a can and B is labeled background. The model assigns probability $1/2$ to the true class of each. Anchor A has one offset error of $1/2$ and three zero errors. Use natural logs and Smooth L1 with $\sigma=1$.`,
+      parts:[
+        item(27,2,'Find the classification loss for each anchor.',
+          'Award 1 mark for each classification term, using the target class for that anchor.',
+          step(m`\mathcal L_{\rm cls}=-\ln p_{\rm true}`,
+            m`\mathcal L_{\rm cls,A}=\mathcal L_{\rm cls,B}=-\ln(1/2)=\ln 2`)),
+        item(31,2,'Find the box-loss contribution of A and explain how B is treated.',
+          'Award 1 mark for the Smooth L1 result. B has no matched object, so it contributes no box loss (1 mark).',
+          step(m`\mathcal L_{\rm off,A}=\sum_j L1_{\rm smooth}(u_j),\quad L1_{\rm smooth}(u)=u^2/2\quad (|u|<1)`,
+            m`\mathcal L_{\rm off,A}=\tfrac12(\tfrac12)^2+0+0+0=\tfrac18`))
+      ]
+    },
+    {
       title:'Suppress duplicates, then evaluate the remaining predictions',
       setup:m`For one class, A, B, C and D have descending confidence scores. IoU(A,B) is $3/4$. All other prediction-pair overlaps are below $1/2$. There are two labeled objects. A and B both match the first, C is a false alarm, and D matches the second. Use hard NMS with threshold $1/2$.`,
       parts:[
@@ -192,7 +219,17 @@ export const detectionExam = {
           step(m`\mathrm{AP}_{07}=\frac1{11}\sum_{r\in\{0,0.1,\ldots,1\}}
             \max_{\tilde r\ge r}P(\tilde r)`,
             m`\begin{aligned}P_r&=1\quad(r=0,\ldots,0.5)\\P_r&=\tfrac23\quad(r=0.6,\ldots,1)\\
-            \mathrm{AP}_{07}&=\frac{6(1)+5(2/3)}{11}=\tfrac{28}{33}\end{aligned}`))
+            \mathrm{AP}_{07}&=\frac{6(1)+5(2/3)}{11}=\tfrac{28}{33}\end{aligned}`)),
+        item(48,3,'Now suppose there is a third labeled object that no surviving box matches. The ranked list is otherwise unchanged. Recompute VOC 2007 AP.',
+          'Award 1 mark for the new recalls, 1 for giving unreachable recall levels zero precision, and 1 for AP.',
+          step(m`\mathrm{AP}_{07}=\tfrac1{11}\sum_{r\in\{0,0.1,\ldots,1\}}P_r`,
+            m`\begin{aligned}
+              R&=(1/3,1/3,2/3)\\
+              P_r&=1\quad(r=0,\ldots,0.3)\\
+              P_r&=\tfrac23\quad(r=0.4,0.5,0.6)\\
+              P_r&=0\quad(r=0.7,\ldots,1)\\
+              \mathrm{AP}_{07}&=\frac{4(1)+3(2/3)+4(0)}{11}=\tfrac6{11}
+            \end{aligned}`))
       ]
     },
     {
