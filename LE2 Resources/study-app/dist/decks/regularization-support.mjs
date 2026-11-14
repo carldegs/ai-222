@@ -45,13 +45,13 @@ export const quickReference = {
  },
  5: {
   summary: math`L1 adds the absolute weight values and can make some weights exactly zero. Its penalty is $\lambda\sum_j|\theta_j|$. L2 adds squared weights, so the cost grows faster for large weights. The strength $\lambda$ controls how much the penalty counts.`,
-  recall: math`$\theta^T\theta$ multiplies each weight by itself and adds the results. For weights $(-2,1)$, L1 costs $3$ and squared L2 costs $5$ before multiplying by $\lambda$.`,
+  recall: math`$\theta^T\theta$ adds the squared weights. In the one-weight lab with data loss $(\theta-2)^2/2$ and $\lambda=2$, L1 reaches exactly zero while L2 leaves $2/5$.`,
   slides: [5,46]
  },
  6: {
   summary: 'Maximum likelihood estimation (MLE) picks the weights that make the observed targets most likely. Given the inputs and weights, independence lets you multiply the individual likelihoods.',
-  recall: math`A log asks what power gives you a number. For example, $\log_{10}(100)=2$. Logs turn products into sums and preserve their ordering. Negating the log makes the largest likelihood correspond to the smallest loss.`,
-  slides: [7,9,10]
+  recall: math`The loss $\mathcal L_{\mathcal D}(\theta)$ scores the whole dataset at one choice of weights. Each term in the sum contributes the negative log-likelihood of one observed target.`,
+  slides: [7,8,9,10]
  },
  8: {
   summary: math`In Gaussian regression, each predicted value $x_n^T\theta$ is the center of a bell curve. The residual $y_n-x_n^T\theta$ is the observed value minus the prediction. Bigger residual magnitudes get lower likelihood scores.`,

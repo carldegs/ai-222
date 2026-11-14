@@ -49,3 +49,19 @@ for (const deck of Object.values(decks)) {
     }
   });
 }
+
+test('exam focus keeps complete scenarios and filters drills at the same slide cutoff', async () => {
+  const { scopePractice } = await import('../dist/state.mjs');
+  const early = {slide: 23};
+  const optional = {slide: 24};
+  const inScope = {parts: [early]};
+  const mixed = {parts: [early, optional]};
+  const exam = {problems: [inScope, mixed], theory: [early, optional]};
+  const questions = [{topic: 0}, {topic: 1}];
+  const deck = {exam, questions, lessons: [{slides: [23]}, {slides: [24]}]};
+  assert.deepEqual(scopePractice(deck, 24), {
+    exam: {problems: [inScope], theory: [early]},
+    questions: [questions[0]]
+  });
+  assert.deepEqual(scopePractice(deck), {exam, questions});
+});

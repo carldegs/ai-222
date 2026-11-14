@@ -41,7 +41,7 @@ export const segmentationLessons = [
     section(9,10,'Join coarse recognition with finer location information',[
       'The [[9:FCN diagram]] shows the model shrinking the grid to learn richer features and then enlarging predictions back toward image size. Upsampling makes the grid denser. A skip connection sends an earlier, finer map directly to a later stage so it can help locate edges.',
       'In [[10:FCN-32s, FCN-16s, and FCN-8s]], trace each extra input. FCN-16s combines upsampled coarse scores with the projected pool4 scores. FCN-8s adds pool3 scores as well. The maps have to be aligned before adding the corresponding class scores.'
-    ],{figure:figure(10,[6,17,87,56],'Follow the long skip arrows from pool4 and pool3 into the progressively finer score maps.')}),
+    ],{lab:'fcn',figure:figure(10,[6,17,87,56],'Follow the long skip arrows from pool4 and pool3 into the progressively finer score maps.')}),
     section(11,11,'Penalize low probability of the annotated pixel class',[
       'The [[11:loss slide]] uses categorical cross-entropy at each pixel. Read the probability assigned to its annotated class and take the negative log. A correct confident answer has a small loss. Training averages over labeled pixels in the simplified calculation below.',
       'On the same slide, compare how closely the horse outlines follow the ground truth as more skip connections are added. Fine features can improve spatial detail while the coarser map still supplies recognition.'
@@ -59,7 +59,7 @@ export const segmentationLessons = [
     section(16,17,'Pool context at four scales and bring it back to each position',[
       m`In [[16:the pyramid pooling module]], a grid of $1\times1$ bins averages the whole feature map. A $2\times2$ grid averages four large regions. The $3\times3$ and $6\times6$ grids preserve progressively more spatial variation.`,
       'The pooled branches use channel projections, then upsample back to the original feature-map resolution. Concatenation stacks the channels, so each position has local features plus summaries from several regions. That differs from an FPN merge, which builds several prediction resolutions. [[17:The reported result]] illustrates performance on the stated dataset.'
-    ],{formulas:['pool'],figure:figure(16,[31,28,60,56],'Trace the feature map into the four pooling branches, then back to the concatenated map.'),
+    ],{formulas:['pool'],lab:'psp',figure:figure(16,[31,28,60,56],'Trace the feature map into the four pooling branches, then back to the concatenated map.'),
       check:['What can a 2-by-2 pooling grid preserve that one global bin cannot?', 'It keeps separate averages for the four parts of the feature map, so their context can differ.']})
   ]),
   lesson('Trace the implementation and evaluate the pixel labels',

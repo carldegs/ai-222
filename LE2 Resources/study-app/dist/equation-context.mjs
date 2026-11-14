@@ -249,7 +249,7 @@ export const equationContext = {
   },
   "Nesterov lookahead": {
     "purpose": "Nesterov momentum checks the slope at a predicted future position, so the new gradient can adjust the movement that momentum is already proposing.",
-    "read": "Evaluate the gradient at the current parameters plus $\\alpha$ times the old velocity, rather than at the current parameters alone.",
+    "read": "For Nesterov, measure the slope at the lookahead, use it to compute the new velocity, then add that velocity to the current parameters. Ordinary momentum follows the same update sequence with the slope measured at the current parameters.",
     "symbols": [
       [
         "$\\theta_t+\\alpha v_t$",
@@ -260,12 +260,16 @@ export const equationContext = {
         "The loss gradient with respect to the parameter position, evaluated at that lookahead point."
       ],
       [
-        "$g_t$",
-        "The resulting lookahead gradient. Insert it into the momentum velocity update and then update $\\theta$."
+        "$g_t^{\\text{ordinary}}$ and $g_t^{\\text{Nesterov}}$",
+        "The gradients of the same minibatch loss at the current and lookahead positions, respectively. Use the gradient for the method you chose."
+      ],
+      [
+        "$v_t$, $v_{t+1}$, and $\\epsilon_t$",
+        "The previous move, the new move, and the learning rate that scales the gradient."
       ]
     ],
     "example": "For $L(\\theta)=\\frac{\\theta^2}{2}$, $\\theta = 2$, $v = -1$, and $\\alpha = \\frac{1}{2}$, the lookahead is $\\frac{3}{2}$. The slope of this loss equals $\\theta$, so $g = \\frac{3}{2}$ there, compared with 2 at the current position.",
-    "insight": "This equation only chooses where to measure the gradient. It is not the complete parameter update. After computing the new velocity, add it to the original $\\theta$, not to the lookahead position."
+    "insight": "The lookahead is temporary. The final update starts at $\\theta_t$ and adds $v_{t+1}$. Starting with $v_0=0$ makes the first gradient evaluation the same for both methods."
   },
   "AdaGrad": {
     "purpose": "Different parameters can have very different gradient histories. AdaGrad gives each coordinate its own effective learning rate by accumulating its squared gradients.",
@@ -324,7 +328,7 @@ export const equationContext = {
     "insight": "If g becomes zero while old r is positive, r shrinks by a factor of $\\rho$. Unlike AdaGrad’s history, it can decrease. Averaging squared gradients changes update scale; it is not the same as remembering a signed velocity."
   },
   "Moment estimates": {
-    "purpose": "Adam keeps two different summaries of recent gradients: a signed average for direction and a squared average for scale. These equations build those summaries.",
+    "purpose": "Adam estimates the first moment by averaging signed gradients and the second raw moment by averaging their squares. Each weight gets its own pair of estimates.",
     "read": "Update s by averaging the old s with the current gradient; update r by averaging the old r with the current squared gradient.",
     "symbols": [
       [
@@ -340,8 +344,8 @@ export const equationContext = {
         "Separate decay coefficients for s and r. Each is in [0, 1), and each new input has weight 1 minus its decay."
       ],
       [
-        "$g_t$ and $g_t^2$",
-        "The current gradient and its elementwise square. This is not a dot product that collapses the vector to one number."
+        "$g_t$ and $g_t\\odot g_t$",
+        "The current gradient and its elementwise square. The circled dot keeps one square per weight. An ordinary dot product would sum the squares into one number."
       ],
       [
         "$t$",
@@ -378,6 +382,7 @@ export const equationContext = {
   "Cosine decay": {
     "purpose": "A learning-rate schedule changes how large the optimizer’s steps can be as training progresses. Cosine decay provides a smooth transition from an initial rate to a final rate.",
     "read": "Start from the minimum rate and add a smoothly decreasing fraction of the difference between the initial and minimum rates.",
+    "cosineCircle": true,
     "symbols": [
       [
         "$\\epsilon(e)$",

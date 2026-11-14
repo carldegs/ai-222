@@ -43,7 +43,7 @@ export const detectionEquations = {
     'Put center shifts and size changes in units relative to the anchor.',
     'Divide the two center shifts by the anchor dimensions. Take the logs of the two size ratios.',
     [[m`$c_{ax},c_{ay},w_a,h_a$`,'Anchor center, width and height.'],[m`$c_{bx},c_{by},w_b,h_b$`,'Ground-truth box center, width and height.'],[m`$y_{\mathrm{gt}}$`,'The encoded four-component training target.']],
-    m`For anchor $(4,4,8,8)$ and object $(8,4,16,8)$ in center-size form, the target is $(1/2,0,\log 2,0)$.`,
+    m`In the diagram, the anchor is $(6,5,8,6)$ and the object box is $(10,7,4,8)$ in center-size form. The target is $(1/2,1/3,\log(1/2),\log(4/3))$. The negative width term means shrink, and the positive height term means grow.`,
     'To decode, multiply the normalized shifts by anchor size and add the center. Exponentiate the size terms before multiplying by anchor size.'),
   scale: equation(30, 'Extra scaling of encoded offsets', m`y_{\mathrm{gt}}^{\mathrm{scaled}}=\left(
     \frac{y_{\mathrm{gt},x}}{\sigma_x},\frac{y_{\mathrm{gt},y}}{\sigma_y},
@@ -51,7 +51,7 @@ export const detectionEquations = {
     'Rescale each component of the normalized target by the corresponding slide constant.',
     'Divide the x, y, width and height components by their own scaling factors.',
     [[m`$y_{\mathrm{gt},x},\ldots,y_{\mathrm{gt},h}$`,'Offsets from slide 29, before extra scaling.'],[m`$\sigma_x,\sigma_y,\sigma_w,\sigma_h$`,'Slide defaults 0.1, 0.1, 0.2 and 0.2.']],
-    m`An encoded x shift of $1/10$ becomes $(1/10)/(1/10)=1$.`,
+    m`The diagram’s horizontal shift is $1/2$ before extra scaling. With $\sigma_x=1/10$, it becomes $(1/2)/(1/10)=5$.`,
     'The superscript distinguishes the two stages of encoding. Multiply by these factors before decoding.'),
   smooth: equation(31, 'Smooth L1', m`L1_{\mathrm{smooth}}(u)=
     \begin{cases}(\sigma u)^2/2 & |u|<1/\sigma^2,\\
@@ -60,7 +60,7 @@ export const detectionEquations = {
     'Use a square near zero and absolute error minus a constant in the tails.',
     [[m`$u$`,'One predicted offset minus its target.'],[m`$\sigma>0$`,'Controls the width of the quadratic region. This is the loss parameter.']],
     m`For $\sigma=1$, error $-1/2$ gives $1/8$ and error $-2$ gives $2-1/2=3/2$.`,
-    'Large errors have a bounded slope. This is a regression loss, while L1 in Regularization penalizes weights.'),
+    'The absolute value makes the penalty depend on how far the prediction is from the target in either direction. Large errors have a bounded slope.'),
   softNms: equation(41, 'Gaussian Soft-NMS score update', m`p_i\leftarrow p_i\exp\left[-\frac{\operatorname{IoU}(\mathcal M,b_i)^2}{\sigma}\right]`,
     'Reduce a remaining prediction’s score based on its overlap with the current winner.',
     'Multiply its score by an exponential that gets smaller as the squared overlap grows.',

@@ -11,6 +11,9 @@ const labs = {
   prediction: ['Move the prediction', 'Try to get the loss down to zero.', range('lab-prediction','Prediction (θ)',8,1)],
   batch: ['Change the minibatch', 'The prediction stays at 4. Try each batch and compare the suggested moves.',
     choice('lab-batch','Targets in this batch',[[0,'2 and 4'],[1,'4 and 6'],[2,'2, 4, and 6 (all examples)']],0)],
+  clipping: ['Compare clipped and unclipped steps from the same point',
+    'Both steps start at θ = 2 on L(θ) = 2θ², where the slope is 8. Keep the learning rate at 1/2 and change only the gradient cap.',
+    choice('lab-cap','Gradient norm cap',[[2,'2'],[5,'5'],[8,'8']],5)],
   signal: ['Pass a signal through several operations', 'Start with a signal of 1 and apply the same multiplier each time.',
     choice('lab-multiplier','Multiplier (λ)',[[.5,'1/2'],[2,'2']],.5) + range('lab-repeats','Repetitions (t)',6,3)],
   gradient: ['Step across the loss curve', 'Start at θ = 4. Try 1/2, then reset and try 5/2. Compare the loss before and after.',
@@ -95,6 +98,17 @@ function mountReadoutLab(lab) {
       const g = slopes.reduce((a,b)=>a+b,0)/slopes.length;
       display([['Slopes at θ = 4',slopes.map(signed).join(', ')],['Average slope (g)',signed(g)]],
         g===0?'The slopes cancel. This batch suggests no move.':`The update subtracts the slope, so the prediction moves ${g>0?'lower':'higher'}.`);
+    } else if (id==='clipping') {
+      const cap=value('cap');
+      const gradient=Math.min(8,cap);
+      const clippedMove=-gradient/2;
+      const next=2+clippedMove;
+      const loss=x=>2*x*x;
+      const points=Array.from({length:65},(_,i)=>{const x=i/16-2;return [x,loss(x)];});
+      display([['Raw gradient → move','8 → −4'],['Clipped gradient → move',`${gradient} → ${signed(clippedMove)}`],
+        ['Raw step: next weight and loss','−2, loss 8'],['Clipped step: next weight and loss',`${number(next)}, loss ${number(loss(next))}`]],
+        'The initial loss is 8. The clipped move has magnitude at most half the cap because the learning rate is 1/2.',
+        chart({points,xMin:-2,xMax:2,yMax:8,dots:[[2,8,true],[-2,8,true],[next,loss(next)]],horizontal:'Parameter θ',vertical:'Loss'}));
     } else if (id==='signal') {
       const t = value('repeats'), multiplier = value('multiplier');
       const sequence = Array.from({length:t+1},(_,i)=>[i,multiplier**i]);

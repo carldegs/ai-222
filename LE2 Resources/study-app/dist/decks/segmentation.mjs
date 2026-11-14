@@ -76,6 +76,8 @@ const resources = [
 
 export const segmentation = {
   id:'segmentation',number:'04',title:'Segmentation',href:'segmentation.html',slideCount:113,
+  optionalFromSlide:24,
+  optionalScopeNote:'Tentative cutoff from class discussion. The lecture reportedly ended before instance segmentation.',
   assetPrefix:'assets/segmentation/slide-',pdf:'assets/segmentation/deck.pdf',storageKey:'ai222-segmentation-v1',
   lessons,tutor,examples,questions,resources,quickReference,equationContext,exam:segmentationExam,
   notationTitle:'New to the notation? Start with masks, RoIs, and overlap',

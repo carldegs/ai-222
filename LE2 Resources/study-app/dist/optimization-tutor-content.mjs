@@ -14,7 +14,10 @@ export const tutorLessons = [
     {slide: 5, title: 'Use a few examples to decide the next move', formulas: [1], explain: [
       'A [[5:minibatch]] is the group of examples used for one update. At a prediction of 4, a batch with targets 2 and 4 nudges the model lower. A batch with targets 4 and 6 nudges it higher. Both give partial information about the same problem. In the demo, the slope tells you how the loss responds if you nudge the prediction higher.',
       'Small batches let us update sooner and usually use less memory. Their estimates can vary more from one batch to the next. Shuffling helps keep examples of one type from being grouped together in a fixed order. The slide also lists practical tradeoffs for GPU use, memory, and learning.',
-      math`You’ll see $\nabla_\theta$ on [[18:the SGD slide]]. That upside-down triangle means “find the slope for each parameter.” The average of those slopes across the batch is the estimate $g$.`
+      math`You’ll see $\nabla_\theta$ on [[18:the SGD slide]]. That upside-down triangle means “find the slope for each parameter.” The average of those slopes across the batch is the estimate $g$.`,
+      math`Compare this with the [[4:full training loss]]. If you split 100 training examples into 5 minibatches of 20, the full loss averages 100 losses ($m=100$), while one minibatch gradient averages 20 gradients ($m=20$). The 5 counts batches. In both equations, $m$ counts examples inside the sum.`,
+      'You can also average the losses in the minibatch first and then differentiate. At the same weights, the gradient of that average loss equals the average of the individual gradients.',
+      'At fixed weights, a uniformly sampled example gives the full-data slope on average. A particular draw can still be far from that average. Variance measures how spread out those draws are by averaging their squared distances from the expected slope. Averaging independent draws can reduce that spread while keeping the same expected slope.'
     ], lab: 'batch', bridge: 'SGD will take the slope estimated from a batch and use it to move the parameters.', check: ['What stays fixed while you compare the two batches?', 'The model still predicts 4. Only the examples used to estimate the slope change.']}
   ]},
   {title: 'Why can a downhill step go wrong?', steps: [
@@ -29,7 +32,7 @@ export const tutorLessons = [
     {slide: 8, title: 'A steep slope can send you too far', formulas: [1], explain: [
       'A steep slope gives a large gradient. If an update scales that gradient by the usual learning rate, it can move the parameters a long way in one step.',
       '[[8:Gradient clipping]] caps a large gradient before the update uses it. A norm cap scales the whole gradient down together. That keeps its direction and reduces its length.'
-    ], figure: {page: 8, box: [48, 12, 47, 43], caption: 'The red arrow is the proposed step. Compare its end with the much lower part of the curve.'}},
+    ], lab:'clipping', figure: {page: 8, box: [48, 12, 47, 43], caption: 'The red arrow is the proposed step. Compare its end with the much lower part of the curve.'}},
     {slide: 9, sources: [9, 10], title: 'Small effects multiply across many steps', formulas: [0], explain: [
       'Suppose a signal is halved each time it passes through a layer. After three repetitions it is one eighth of its original size. If it doubles each time, it becomes eight times as large.',
       math`Slide 9 shows this idea for repeated multiplication by a matrix $W$. An eigenvalue $\lambda$ describes the multiplier along one direction. Repeating it gives $\lambda^t$. Gradients can become extremely small or large as they pass through many operations.`,
@@ -73,11 +76,14 @@ export const tutorLessons = [
     ], figure: {page: 20, box: [9, 40, 82, 45], caption: 'Compare the two paths inside the ovals. The left path crosses the valley repeatedly. The right path reaches farther along the valley.'}},
     {slide: 21, title: 'Keep a fraction of the last move', formulas: [0], explain: [
       math`The deck calls the remembered move $v$. Multiply the old $v$ by $\alpha$, then subtract the new gradient contribution $\epsilon g$. Add the resulting $v$ to $\theta$.`,
-      math`Try $v=-2$, $\alpha=1/2$, $\epsilon=1/2$, and $g=2$. The remembered part is $-1$ and the gradient adds another $-1$, so the new $v$ is $-2$.`
+      math`Try $v=-2$, $\alpha=1/2$, $\epsilon=1/2$, and $g=2$. The remembered part is $-1$ and the gradient adds another $-1$, so the new $v$ is $-2$.`,
+      math`Now start at $v_0=0$ and keep the same $g=2$, $\epsilon=1/2$, and $\alpha=1/2$. Each step retains half the old move and adds $-1$. That gives $v_1=-1$, $v_2=-(1+1/2)$, and $v_3=-(1+1/2+1/4)$. Each older contribution gets multiplied by another half, so after $t$ steps the move is $-\epsilon g\sum_{j=0}^{t-1}\alpha^j$.`
     ], check: ['If α is zero, what remains of the update?', 'The move is −εg, the current gradient contribution.']},
     {slide: 22, sources: [22, 23], title: 'Check the slope where momentum would take you', formulas: [1], explain: [
       math`[[22:Nesterov momentum]] first looks at $\theta+\alpha v$. That is where the remembered part of the move would take us. It evaluates the gradient at that lookahead position, then uses that gradient to compute the actual update.`,
-      'Imagine the current slope points down to the right, but your remembered move would carry you past the bottom. The slope at the lookahead position can already point the other way.'
+      'Imagine the current slope points down to the right, but your remembered move would carry you past the bottom. The slope at the lookahead position can already point the other way.',
+      math`Both versions keep the velocity $v_t$. Ordinary momentum measures the slope at $\theta_t$ and Nesterov measures it at $\theta_t+\alpha v_t$. In either case, use that slope to compute $v_{t+1}$, then add the new velocity to $\theta_t$. Setting $\alpha=0$ removes the lookahead and the remembered move, giving plain SGD.`,
+      'If the slope is constant everywhere, both methods measure the same slope. From the same starting weights and velocity, they then take identical steps.'
     ], bridge: 'Momentum summarizes signed movement. AdaGrad uses squared gradients to decide how large a step each parameter should get.'}
   ]},
   {title: 'Give each parameter its own step size', steps: [
@@ -102,12 +108,14 @@ export const tutorLessons = [
   ]},
   {title: 'Combine a direction with a scale', steps: [
     {slide: 28, title: 'Keep two different averages', formulas: [0], explain: [
-      math`[[28:Adam]] calls the signed-gradient average $s$ and the squared-gradient average $r$. If recent gradients alternate between $+2$ and $-2$, their signed contributions can cancel in $s$. Their squares both contribute 4 to $r$.`,
+      math`[[28:Adam]] uses $s$ to estimate the first moment (the mean of signed gradients) and $r$ to estimate the second raw moment (the mean of squared gradients). If a weight’s recent gradients alternate between $+2$ and $-2$, their signed contributions can cancel in $s$. Their squares both contribute 4 to $r$.`,
+      math`The slide writes $g_t\odot g_t$. The circled dot means multiply each entry by itself. For two weights with gradient $(-2,3)$, this gives $(4,9)$, so each weight has its own squared gradient.`,
       'This gives Adam two pieces of information. The signed average tells it which direction has been consistent. The squared average helps it choose the size of that move.'
     ], check: ['Which average can be close to zero while the gradients are individually large?', 'The signed average s. Large positive and negative gradients can cancel.']},
     {slide: 29, sources: [28, 29], title: 'Correct for the averages starting at zero', formulas: [1], explain: [
       math`Start both averages at zero. For a first gradient of 2 and decay rates of $1/2$, the raw averages are $s=1$ and $r=2$. Only half of each average comes from the data so far.`,
-      math`The correction divides each average by $1-\rho^t$, using its own decay rate. At the first step both denominators are $1/2$, so the corrected values are $s'=2$ and $r'=4$. Adam scales the corrected direction $s'$ by $\delta+\sqrt{r'}$ before making the move.`
+      math`The correction divides each average by $1-\rho^t$, using its own decay rate. At the first step both denominators are $1/2$, so the corrected values are $s'=2$ and $r'=4$. Adam scales the corrected direction $s'$ by $\delta+\sqrt{r'}$ before making the move.`,
+      math`If the gradient stays at $g$, the raw direction average is $s_t=(1-\rho_1)g\sum_{j=0}^{t-1}\rho_1^j=(1-\rho_1^t)g$. Dividing by $1-\rho_1^t$ gives back $g$. When gradients differ, the corrected value still represents a weighted history. With $\rho_1=1/2$ and gradients $2$ then $4$, the raw average is $5/2$ and the corrected value is $(5/2)/(3/4)=10/3$.`
     ], lab: 'adam', check: ['With g = 2 and both decay rates 1/2, what is the corrected direction on the first step?', 'It is 2. The raw average is 1 and the correction divides by 1/2.']},
     {slide: 30, sources: [30, 31], title: 'Compare paths on one loss surface', explain: [
       'On slide 30, the curves show how different update rules move on the same surface. Their paths can differ because of how they combine the current gradient, its history, and step size.',
